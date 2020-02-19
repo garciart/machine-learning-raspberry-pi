@@ -6,7 +6,25 @@ Smart Sensor is a customizable, plug-and-play analyzer, which uses TensorFlow in
 
 In this demo, we will use temperature and humidity data collected by sensors, connected to a Raspberry Pi via a GrovePi HAT (Hardware Attached on Top), to determine if the thermal comfort level of a room complies with the American Society of Heating, Refrigerating and Air-Conditioning Engineers (ASHRAE) Standard 55-2017. While this would be easy to accomplish with simple if-else-then program, we wanted to demonstrate the capabilities and scalability of machine learning systems.
 
-## Assumtions
+Classes
+
+- Cold 0
+- Cool 1
+- Slightly Cool 2
+- Neutral 3
+- Slightly Warm 4
+- Warm 5
+- Hot 6
+
+Features
+
+- Operative Temperature
+- Air Speed
+- Relative Humidity
+- Metabolic Rate
+- Clothing Level
+
+## Assumptions
 
 - There is a heating, ventilation, and air conditioning system in place that can manipulate the operative temperature, air speed, and relative humidity of the room.
 - The thermal comfort level is based on the predicted mean vote (PMV).
