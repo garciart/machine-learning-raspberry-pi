@@ -15,7 +15,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import os
 
-import numpy
+import numpy as np
 import pandas as pd
 import tensorflow as tf
 
@@ -28,19 +28,35 @@ __license__ = "MIT"
 # Read CSV data into dataset
 CSV_COLUMN_NAMES = ["air_speed", "rel_humid",
                     "meta_rate", "cloth_lvl", "oper_temp", "sens_desc"]
-dataset = pd.read_csv("thermal_comfort.csv", names=CSV_COLUMN_NAMES, header=0)
+dataframe = pd.read_csv("thermal_comfort.csv", names=CSV_COLUMN_NAMES, header=0)
 
 # Name classes and features
 CLASSES = ["Cold", "Cool", "Slightly Cool",
            "Neutral", "Slightly Warm", "Warm", "Hot"]
 FEATURES = ["air_speed", "rel_humid", "meta_rate", "cloth_lvl", "oper_temp"]
 
-
+"""
 # Utility functions to verify dataset
-print("Dataset shape:", dataset.shape)
+print("Dataset shape:", dataframe.shape)
 print("Data check (first 20 rows:):")
-print(dataset.head(20))
+print(dataframe.head(20))
 print("Dataset feature descriptions:")
-print(dataset.describe())
+print(dataframe.describe())
 print("Dataset class distribution:")
-print(dataset.groupby("sens_desc").size())
+print(dataframe.groupby("sens_desc").size())
+"""
+
+# Split the dataframe into a training set and test set (80:20 ratio)
+msk = np.random.rand(len(dataframe)) < 0.8
+train = dataframe[msk]
+test = dataframe[~msk]
+
+# Removethe sensation description from dataframe (i.e., the CLASSES)
+train_y = train.pop("sens_desc")
+test_y = test.pop("sens_desc")
+
+print(train.head())
+
+
+
+# https://www.tensorflow.org/tutorials/customization/custom_training_walkthrough
