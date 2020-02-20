@@ -91,7 +91,7 @@ for name, model in models:
     clf = model
     clf.fit(X_train, Y_train)
     prediction = clf.predict(X_validation)
-    scores.append(prediction)
+    scores.append(accuracy_score(Y_validation,prediction))
     names.append(name)
 
 # Get and sort the results
@@ -102,7 +102,7 @@ for s, n in zip(scores, names):
 results.sort(reverse=True)
 
 for score, name in results:
-    print("{0:.2f}%: {1}".format(accuracy_score(Y_validation, score), name))
+    print("{0:.2f}%: {1}".format(score, name))
 
 """
 print("Mean, Standard Deviation, and Model Name:")
