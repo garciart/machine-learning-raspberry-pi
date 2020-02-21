@@ -30,7 +30,8 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC, LinearSVC
 from sklearn.tree import DecisionTreeClassifier
 """
-import grovepi
+from grovepi import *
+from grove_rgb_lcd import *
 
 # Module metadata dunders
 __author__ = "Rob Garcia"
@@ -38,23 +39,43 @@ __copyright__ = "Copyright 2019-2020, Rob Garcia"
 __email__ = "rgarcia@rgprogramming.com"
 __license__ = "MIT"
 
-dht_sensor_port = 5 # Digital port 5
 blue_dht = 0        # For DHT11
 white_dht = 1       # For DHT22
+red_led = 5         # Digital port 5
+green_led = 6       # Digital port 6
+dht_sensor_port = 7 # Digital port 7
 
 sensor_data = []
 
 for x in range(100):
     try:
         for y in range(3):
-            [temp,humid] = grovepi.dht(dht_sensor_port, blue_dht)
+            [temp,humid] = dht(dht_sensor_port, blue_dht)
             if math.isnan(temp) == False and math.isnan(humid) == False:
                 print("Temperature:{}C | Humidity:{}%".format(temp, humid))
-            sensor_data.append([temp, humid]);
+                if temp >= 20.0:
+                    setRGB(0, 255, 0)
+                    digitalWrite(6, 1)
+                    time.sleep(2)
+                    digitalWrite(6, 0)
+                else:
+                    setRGB(255, 0, 0)
+                    digitalWrite(5, 1)
+                    time.sleep(2)
+                    digitalWrite(5, 0)
+                t = str(temp)
+                h = str(humid)
+                setText_norefresh("Temp:{} C\nHumidity: {}%".format(t, h))
+                sensor_data.append([temp, humid]);
             # Wait three seconds before next reading
             time.sleep(3)
     except (IOError, TypeError) as ex:
         print("Error: {}".format(str(ex)))
+    except KeyboardInterrupt:
+        digitalWrite(5, 0)
+        digitalWrite(6, 0)
+        setRGB(0, 0, 0)
     print(sensor_data)
     # Wait 30 seconds before collecting next set of data
+    setRGB(0, 0, 0)
     time.sleep(30)
