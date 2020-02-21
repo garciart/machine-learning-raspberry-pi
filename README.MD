@@ -2,9 +2,13 @@
 
 ## Introduction
 
-Smart Sensor is a customizable, plug-and-play analyzer, which uses TensorFlow instead of a rule-based, conditional logic system to process data.
+Smart Sensor is a customizable, plug-and-play analyzer, which uses machine learning instead of a rule-based, conditional logic system to process data.
 
-In this demo, we will use temperature and humidity data collected by sensors, connected to a Raspberry Pi via a GrovePi HAT (Hardware Attached on Top), to determine if the thermal comfort level of a room complies with the American Society of Heating, Refrigerating and Air-Conditioning Engineers (ASHRAE) Standard 55-2017. While this would be easy to accomplish with simple if-else-then program, we wanted to demonstrate the capabilities and scalability of machine learning systems.
+In this demo, we will use temperature and humidity data collected to determine if the thermal comfort level of a room complies with the American Society of Heating, Refrigerating and Air-Conditioning Engineers (ASHRAE) Standard 55-2017.
+
+We will be using a Seeed DHT11 sensor, connected to a Raspberry Pi via a GrovePi HAT (Hardware Attached on Top).
+
+While this would be easy to accomplish with simple if-else-then program, we wanted to demonstrate the capabilities and scalability of machine learning systems.
 
 Classes
 

@@ -44,10 +44,11 @@ def scikit_learn_classification_test():
                           names=csv_column_names, header=0)
 
     # Name classes and features
-    # classes = ["Cold", "Cool", "Slightly Cool",
-    #            "Neutral", "Slightly Warm", "Warm", "Hot"]
-    # features = ["air_speed", "rel_humid",
+    class_names = ["Cold", "Cool", "Slightly Cool",
+                   "Neutral", "Slightly Warm", "Warm", "Hot"]
+    # feature_names = ["air_speed", "rel_humid",
     #             "meta_rate", "cloth_lvl", "oper_temp"]
+    # label_name = ["sens_desc"]
 
     """ Utility functions to verify dataset
     print("Dataset shape:", dataset.shape)
@@ -77,7 +78,7 @@ def scikit_learn_classification_test():
     models.append(
         ("k-Nearest Neighbors Classifier (k-NN)", KNeighborsClassifier()))
     models.append(("Support Vector Classification (SVC)",
-                   SVC(kernel='linear', C=1.0)))
+                   SVC(kernel="linear", C=1.0)))
     models.append(("Gaussian Naive Bayes (GaussianNB)", GaussianNB()))
     models.append(("Random Forest Classifier", RandomForestClassifier()))
     models.append(("Extra Trees Classifier", ExtraTreesClassifier()))
@@ -123,7 +124,7 @@ def scikit_learn_classification_test():
         model = clf.fit(X, y)
         for j, (data, expected) in enumerate(sample_data):
             print("Sample #{}: Prediction: {} (should be {})".format(
-                j + 1, model.predict(data), expected))
+                j + 1, class_names[int(model.predict(data))], expected))
         print()
 
 
@@ -131,6 +132,7 @@ def main():
     """Application entry point."""
     print("scikit-learn Classification Test.\n")
     scikit_learn_classification_test()
+    print("Job complete. Have an excellent day.")
 
 
 if __name__ == "__main__":
