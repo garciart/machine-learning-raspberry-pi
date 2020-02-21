@@ -106,7 +106,6 @@ def tensorflow_classification_test():
         dnn_feature_columns=my_feature_columns,
         dnn_hidden_units=[hidden_layer_1, hidden_layer_2],
         n_classes=7)
-
     # Linear classifier model.
     classifier = tf.estimator.LinearClassifier(
         feature_columns=my_feature_columns,

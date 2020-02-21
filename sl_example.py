@@ -33,98 +33,95 @@ __license__ = "MIT"
 
 
 def scikit_learn_classification_test():
-    """
-    Train, test, and run different classification models, selected from
+    """Train, test, and run different classification estimators, selected from
     https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html
     """
-    # Read CSV data into dataset
-    csv_column_names = ["air_speed", "rel_humid",
-                        "meta_rate", "cloth_lvl", "oper_temp", "sens_desc"]
-    dataset = pd.read_csv("thermal_comfort.csv",
-                          names=csv_column_names, header=0)
-
-    # Name classes and features
-    class_names = ["Cold", "Cool", "Slightly Cool",
+    # Read CSV dataset into a dataframe
+    dataframe = pd.read_csv("thermal_comfort.csv")
+    # Get feature_names from column headers: ["atmo_pres", "air_speed",
+    #     "rel_humid", "meta_rate", "cloth_lvl", "oper_temp", "sens_desc"]
+    feature_names = dataframe.columns.values
+    # Drop the column headers
+    dataframe.drop([0, 0])
+    # Assign names to the labels/classes
+    label_names = ["Cold", "Cool", "Slightly Cool",
                    "Neutral", "Slightly Warm", "Warm", "Hot"]
-    # feature_names = ["air_speed", "rel_humid",
-    #             "meta_rate", "cloth_lvl", "oper_temp"]
-    # label_name = ["sens_desc"]
 
-    """ Utility functions to verify dataset
-    print("Dataset shape:", dataset.shape)
+    """Utility functions to verify dataframe
+    print("Dataframe shape:", dataframe.shape)
     print("Data check (first 20 rows:):")
-    print(dataset.head(20))
-    print("Dataset feature descriptions:")
-    print(dataset.describe())
-    print("Dataset class distribution:")
-    print(dataset.groupby("sens_desc").size())
+    print(dataframe.head(20))
+    print("Dataframe feature descriptions:")
+    print(dataframe.describe())
+    print("Dataframe class distribution:")
+    print(dataframe.groupby("sens_desc").size())
     """
 
-    # Split the dataset. Use 80% for training and 20% for testing
+    # Split the dataframe, then use 80% for training and 20% for testing
     # (as determined by test_size). Remove random_state for production.
-    array = dataset.values
-    X = array[:, 0:5]
-    y = array[:, 5]
+    array = dataframe.values
+    feature_values = array[:, 0:6]
+    label_values = array[:, 6]
     x_train, x_validation, y_train, y_validation = train_test_split(
-        X, y, test_size=0.20, random_state=1)
+        feature_values, label_values, test_size=0.20, random_state=1)
 
-    # Get confidence for select algorithms
-    models = []
-    models.append(("Logistic Regression", LogisticRegression(
+    # Create tuple of estimators
+    estimators = []
+    estimators.append(("Logistic Regression", LogisticRegression(
         solver="liblinear", multi_class="ovr")))
-    models.append(
+    estimators.append(
         ("Linear Support Vector Classification (LinearSVC)", LinearSVC(dual=False)))
-    models.append(("Stochastic Gradient Descent (SGD)", SGDClassifier()))
-    models.append(
+    estimators.append(("Stochastic Gradient Descent (SGD)", SGDClassifier()))
+    estimators.append(
         ("k-Nearest Neighbors Classifier (k-NN)", KNeighborsClassifier()))
-    models.append(("Support Vector Classification (SVC)",
+    estimators.append(("Support Vector Classification (SVC)",
                    SVC(kernel="linear", C=1.0)))
-    models.append(("Gaussian Naive Bayes (GaussianNB)", GaussianNB()))
-    models.append(("Random Forest Classifier", RandomForestClassifier()))
-    models.append(("Extra Trees Classifier", ExtraTreesClassifier()))
-    models.append(("Decision Tree Classifier", DecisionTreeClassifier()))
-    models.append(("AdaBoost Classifier", AdaBoostClassifier()))
-    models.append(("Gradient Boosting Classifier",
+    estimators.append(("Gaussian Naive Bayes (GaussianNB)", GaussianNB()))
+    estimators.append(("Random Forest Classifier", RandomForestClassifier()))
+    estimators.append(("Extra Trees Classifier", ExtraTreesClassifier()))
+    estimators.append(("Decision Tree Classifier", DecisionTreeClassifier()))
+    estimators.append(("AdaBoost Classifier", AdaBoostClassifier()))
+    estimators.append(("Gradient Boosting Classifier",
                    GradientBoostingClassifier()))
-    models.append(("Linear Discriminant Analysis (LDA)",
+    estimators.append(("Linear Discriminant Analysis (LDA)",
                    LinearDiscriminantAnalysis()))
 
-    # Evaluate each model
+    # Evaluate the accuracy of each estimator
     results = []
     print("Test set accuracy against training set:")
-    for name, clf in models:
-        clf.fit(x_train, y_train)
-        prediction = clf.predict(x_validation)
+    for name, classifier in estimators:
+        classifier.fit(x_train, y_train)
+        prediction = classifier.predict(x_validation)
         score = accuracy_score(y_validation, prediction)
-        results.append((name, clf, score))
+        results.append((name, classifier, score))
 
     # Get and sort the results
     results.sort(key=lambda r: r[2], reverse=True)
 
-    for name, clf, score in results:
+    for name, classifier, score in results:
         print("{0:.2f}%: {1}".format(score, name))
 
     print()
 
-    # Show sample data
+    # Show data to be evaluated
     sample_data = []
-    sample_data.append(([[0.1, 50.0, 1.0, 0.5, 23.0]], "Slightly Cool"))
-    sample_data.append(([[0.1, 60.0, 1.0, 0.6, 26.0]], "Neutral"))
-    sample_data.append(([[0.1, 76.0, 1.0, 0.6, 28.0]], "Slightly Warm"))
+    sample_data.append(([[101325.0, 0.1, 50.0, 1.0, 0.5, 23.0]], "Slightly Cool"))
+    sample_data.append(([[101325.0, 0.1, 60.0, 1.0, 0.6, 26.0]], "Neutral"))
+    sample_data.append(([[101325.0, 0.1, 76.0, 1.0, 0.6, 28.0]], "Slightly Warm"))
 
-    for i, (data, expected) in enumerate(sample_data):
-        print("Sample #{}: {} = {}".format(i, data, expected))
+    for i, (data, expected_label) in enumerate(sample_data, start=1):
+        print("Sample #{}: {} = {}".format(i, data, expected_label))
 
     print()
 
-    # Run samples against the dataset using the classifiers in accuracy order
-    for name, clf, score in results:
-        print("Running samples against the dataset using {0}\n(test score was {1:.2f}%)...".format(
+    # Run samples using all classifiers in accuracy order
+    for name, classifier, score in results:
+        print("Running samples using {0}\n(test score was {1:.2f}%)...".format(
             name, score))
-        model = clf.fit(X, y)
-        for j, (data, expected) in enumerate(sample_data):
-            print("Sample #{}: Prediction: {} (should be {})".format(
-                j + 1, class_names[int(model.predict(data))], expected))
+        model = classifier.fit(feature_values, label_values)
+        for j, (data, expected_label) in enumerate(sample_data, start=1):
+            print("Sample #{}: Prediction: {} (expected {})".format(
+                j, label_names[int(model.predict(data))], expected_label))
         print()
 
 
