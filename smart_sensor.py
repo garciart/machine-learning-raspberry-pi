@@ -17,6 +17,7 @@ import math
 import time
 
 import pandas as pd
+"""
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.ensemble import (AdaBoostClassifier, ExtraTreesClassifier,
                               GradientBoostingClassifier,
@@ -28,7 +29,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC, LinearSVC
 from sklearn.tree import DecisionTreeClassifier
-
+"""
 import grovepi
 
 # Module metadata dunders
@@ -43,11 +44,17 @@ white_dht = 1       # For DHT22
 
 sensor_data = []
 
-while True:
+for x in range(100):
     try:
-        for x in range(3):
-            [temp, humidity] = grovepi.dht(dht_sensor_port, blue_dht)
-            if math.isnan(temp) == False and math.isnan(humidity) == False:
-                print("Temperature: {}C | Humidity: {}%". format(temp, humidity))
+        for y in range(3):
+            [temp,humid] = grovepi.dht(dht_sensor_port, blue_dht)
+            if math.isnan(temp) == False and math.isnan(humid) == False:
+                print("Temperature:{}C | Humidity:{}%".format(temp, humid))
+            sensor_data.append([temp, humid]);
+            # Wait three seconds before next reading
+            time.sleep(3)
     except (IOError, TypeError) as ex:
-        print("Error: {}". format(str(ex)))
+        print("Error: {}".format(str(ex)))
+    print(sensor_data)
+    # Wait 30 seconds before collecting next set of data
+    time.sleep(30)
