@@ -47,18 +47,23 @@ def tensorflow_classification_test():
     https://www.tensorflow.org/tutorials/estimator/premade
     """
     # Read CSV data into dataset
-    csv_column_names = ["air_speed", "rel_humid",
-                        "meta_rate", "cloth_lvl", "oper_temp", "sens_desc"]
-    dataframe = pd.read_csv("thermal_comfort.csv",
-                            names=csv_column_names, header=0)
-
-    # Name classes and features
-    class_names = ["Cold", "Cool", "Slightly Cool",
+    # csv_column_names = ["air_speed", "rel_humid",
+    #                     "meta_rate", "cloth_lvl", "oper_temp", "sens_desc"]
+    dataframe = pd.read_csv("thermal_comfort.csv")
+    # Get feature_names from column headers: ["atmo_pres", "air_speed",
+    #     "rel_humid", "meta_rate", "cloth_lvl", "oper_temp", "sens_desc"]
+    csv_column_names = dataframe.columns.values
+    feature_names = dataframe.columns.values[:-1]
+    # Drop the column headers
+    dataframe.drop([0, 0])
+    # Assign names to the labels/classes
+    label_names = ["Cold", "Cool", "Slightly Cool",
                    "Neutral", "Slightly Warm", "Warm", "Hot"]
     # "air_speed", "rel_humid", "meta_rate", "cloth_lvl", "oper_temp"
     # feature_names = csv_column_names[:-1]
     # "sens_desc"
     label_name = csv_column_names[-1]
+    print(label_name)
 
     """
     # Utility functions to verify dataset
@@ -89,10 +94,14 @@ def tensorflow_classification_test():
     # Guang-Bin Huang. (2003). Learning capability and storage capacity of
     # two-hidden-layer feedforward networks. IEEE Transactions on Neural Networks,
     # 14(2), 274–281. doi:10.1109/tnn.2003.809401
-    hidden_layer_1 = int(math.sqrt(((len(label_name) + 2) * len(dataframe))) +
-                         (2 * math.sqrt(len(dataframe) / (len(label_name) + 2))))
-    hidden_layer_2 = int(
-        len(label_name) * (math.sqrt((len(dataframe) / (len(label_name) + 2)))))
+    # Thanks to Arvis Sulovari of the University of Washington Seattle
+    print("Inputs (Features) length:", len(feature_names))
+    print("Outputs (Labels) length:", len(label_names))
+    m = len(label_names)
+    n = len(feature_names)
+    hidden_layer_1 = int(math.sqrt(((m + 2) * n)) + (2 * (math.sqrt(n / (m + 2)))))
+    hidden_layer_2 = int(m * (math.sqrt(n / (m + 2))))
+    print("m = {}, n = {}, h1 = {}, h2 = {}".format(m, n, hidden_layer_1, hidden_layer_2))
 
     # A classifier for TensorFlow DNN models.
     classifier = tf.estimator.DNNClassifier(
@@ -124,6 +133,7 @@ def tensorflow_classification_test():
     # Generate predictions from the model
     expected = ["Slightly Cool", "Neutral", "Slightly Warm"]
     predict_x = {
+        "atmo_pres": [1013.25, 1013.25, 1013.25],
         "air_speed": [0.1, 0.1, 0.1],
         "rel_humid": [50.0, 60.0, 76.0],
         "meta_rate": [1.0, 1.0, 1.0],
@@ -139,7 +149,7 @@ def tensorflow_classification_test():
         probability = pred_dict['probabilities'][class_id]
 
         print('Prediction is "{}" ({:.1f}%), expected "{}"'.format(
-            class_names[class_id], 100 * probability, expec))
+            label_names[class_id], 100 * probability, expec))
 
 
 def main():
