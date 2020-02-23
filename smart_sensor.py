@@ -66,7 +66,7 @@ for x in range(100):
                 t = str(temp)
                 h = str(humid)
                 setText_norefresh("Temp:{} C\nHumidity: {}%".format(t, h))
-                sensor_data.append([temp, humid]);
+                sensor_data.append([temp, humid])
             # Wait three seconds before next reading
             time.sleep(3)
     except (IOError, TypeError) as ex:

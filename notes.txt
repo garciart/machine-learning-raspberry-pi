@@ -1,3 +1,20 @@
+https://www.waveshare.com/wiki/Sense_HAT_(B)
+Use sudo apt-get install wiringpi for WiringPi
+
+For demos:
+mkdir Sense-HAT-B-Demo
+cd Sense-HAT-B-Demo
+wget https://www.waveshare.com/w/upload/6/6c/Sense-HAT-B-Demo.7z
+7z x Sense-HAT-B-Demo.7z
+
+Run sudo rpi-update is you have issues with sudo raspi-config
+
+For Pi 3 Model B+:
+https://thingsboard.io/docs/user-guide/install/rpi/
+
+For Pi Zero:
+https://thingsboard.io/docs/samples/raspberry/temperature/
+
 https://stackoverflow.com/questions/29466663/memory-error-while-using-pip-install-matplotlib
 
 Cost Benefit
