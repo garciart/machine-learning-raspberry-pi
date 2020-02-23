@@ -1,4 +1,4 @@
-#!python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
 """Thermal comfort predictor using TensorFlow machine learning.
