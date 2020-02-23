@@ -4,6 +4,8 @@
 
 ## Introduction
 
+While I was an intern at NASA, I noticed a lot of interest in "smart buildings", i.e., buildings or public areas with built-in support for Internet of Things (IoT) devices.
+
 Smart Sensor is a customizable, plug-and-play analyzer, written in Python, which uses machine learning instead of a rule-based, conditional logic system to process data. It can also act on the results of that data on the "edge". The Smart Sensor can accept static and streaming input from multiple sources within the Internet of Things (IoT), such as data files, sensors, audio and video feeds, etc. It can accept this data through both over-the-air and hard-wired connections.
 
 The data, in the form of a numerical vector, consists of readings from the system to be analyzed, such as speed, temperature, vibration, etc. These vectors can scale from one reading to multiple sets with hundreds of simultaneous readings. Once the Smart Sensor receives the data, it runs it through a local machine learning classifier engine, such as scikit learn or TensorFlow, which allows it to verify performance, detect anomalies, or identify trends. Afterwards, it can display the results; it can alert the user; or it can take corrective action on its own through an actuator. This system is designed to complement or replace rule-based, conditional logic systems, such as engine control units (i.e., ECU's, which use lookup tables), electronic flight control systems (i.e., EFCS's, which use flight control laws), HVAC control systems (which use target states), etc.
@@ -20,6 +22,8 @@ In this demo, we will collect environmental data to determine if the thermal com
 - Model - An algorithm that accounts for the relationship between features and the correct label.
 
 ## Steps
+
+While the system will only measure operative temperature and relative humidity, it can also process atmospheric pressure, air speed, metabolic rate, and the insulating effects of clothing level. It will predict if the occupants feel cold, cool, slightly cool, neutral, slightly warm, warm, or hot.
 
 1. The application loads and parses the dataset, and tests all classifiers against the dataset.
 2. The application creates a model using the highest scoring classifier.
