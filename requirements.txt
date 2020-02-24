@@ -1,4 +1,4 @@
-# Usage: pip install --no-cache-dir -r requirements.txt
+# Usage: pip3 install --no-cache-dir -r requirements.txt
 numpy>=1.11.0
 scipy>=0.17.0
 joblib>=0.11
