@@ -1,13 +1,13 @@
 """Setup file
-Usage: >> python setup.py install
+Usage: >> sudo python3 setup.py install
 """
-from setuptools import setup
+import setuptools
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="python-hello-garciart",
+    name="smart-sensor",
     version="2020.1",
     author="Rob Garcia",
     author_email="rgarcia@rgprogramming.com",

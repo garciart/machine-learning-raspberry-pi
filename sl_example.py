@@ -24,6 +24,7 @@ from sklearn.svm import (LinearSVC, SVC)
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import (AdaBoostClassifier, ExtraTreesClassifier,
                               GradientBoostingClassifier, RandomForestClassifier)
+import time
 
 # Module metadata dunders
 __author__ = "Rob Garcia"
@@ -32,7 +33,7 @@ __email__ = "rgarcia@rgprogramming.com"
 __license__ = "MIT"
 
 
-def scikit_learn_classification_test():
+def scikit_learn_classification_test(*sample_data):
     """Train, test, and run different classification estimators, selected from
     https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html
     """
@@ -100,18 +101,12 @@ def scikit_learn_classification_test():
 
     for name, classifier, score in results:
         print("{0:.2f}%: {1}".format(score, name))
-
+        
     print()
-
-    # Show data to be evaluated
-    sample_data = []
-    sample_data.append(([[101325.0, 0.1, 50.0, 1.0, 0.5, 23.0]], "Slightly Cool"))
-    sample_data.append(([[101325.0, 0.1, 60.0, 1.0, 0.6, 26.0]], "Neutral"))
-    sample_data.append(([[101325.0, 0.1, 76.0, 1.0, 0.6, 28.0]], "Slightly Warm"))
-
+    
+    print("Data to be evaluated:")
     for i, (data, expected_label) in enumerate(sample_data, start=1):
         print("Sample #{}: {} = {}".format(i, data, expected_label))
-
     print()
 
     # Run samples using all classifiers in accuracy order
@@ -127,8 +122,16 @@ def scikit_learn_classification_test():
 
 def main():
     """Application entry point."""
-    print("scikit-learn Classification Test.\n")
-    scikit_learn_classification_test()
+    start_time = time.time()
+    print("scikit-learn Classification Test.")
+    # Sample data to be evaluated
+    sample_data = []
+    sample_data.append(([[101325.0, 0.1, 50.0, 1.0, 0.5, 23.0]], "Slightly Cool"))
+    sample_data.append(([[101325.0, 0.1, 60.0, 1.0, 0.6, 26.0]], "Neutral"))
+    sample_data.append(([[101325.0, 0.1, 76.0, 1.0, 0.6, 28.0]], "Slightly Warm"))
+    print()
+    scikit_learn_classification_test(*sample_data)
+    print("Elapsed time: {} seconds.".format((time.time() - start_time)))
     print("Job complete. Have an excellent day.")
 
 

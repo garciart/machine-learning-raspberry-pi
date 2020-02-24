@@ -1,1 +1,4 @@
-dataset.xlsx
+/dist
+/smart_sensor.egg-info
+/build
+/__pycache__

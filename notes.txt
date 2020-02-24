@@ -36,7 +36,7 @@ Plug & Play, programmable & customizable
 Capable of light-duty data analysis, expert system control & machine learning
 Can scale to $19
 
-self-correcting and learning 
+self-correcting and learning
 
 A compact, low-demand device or system capable of:
 Executing tensor mathematics
