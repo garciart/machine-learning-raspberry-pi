@@ -45,7 +45,7 @@ def scikit_learn_classification_test(*sample_data):
     # Drop the column headers
     dataframe.drop([0, 0])
     # Assign names to the labels/classes
-    label_names = ["Cold", "Cool", "Slightly Cool",
+    class_names = ["Cold", "Cool", "Slightly Cool",
                    "Neutral", "Slightly Warm", "Warm", "Hot"]
 
     """Utility functions to verify dataframe
@@ -116,7 +116,7 @@ def scikit_learn_classification_test(*sample_data):
         model = classifier.fit(feature_values, label_values)
         for j, (data, expected_label) in enumerate(sample_data, start=1):
             print("Sample #{}: Prediction: {} (expected {})".format(
-                j, label_names[int(model.predict(data))], expected_label))
+                j, class_names[int(model.predict(data))], expected_label))
         print()
 
 
@@ -126,9 +126,9 @@ def main():
     print("scikit-learn Classification Test.")
     # Sample data to be evaluated
     sample_data = []
-    sample_data.append(([[101325.0, 0.1, 50.0, 1.0, 0.5, 23.0]], "Slightly Cool"))
-    sample_data.append(([[101325.0, 0.1, 60.0, 1.0, 0.6, 26.0]], "Neutral"))
-    sample_data.append(([[101325.0, 0.1, 76.0, 1.0, 0.6, 28.0]], "Slightly Warm"))
+    sample_data.append(([[1013.25, 0.1, 50.0, 1.0, 0.5, 23.0]], "Slightly Cool"))
+    sample_data.append(([[1013.25, 0.1, 60.0, 1.0, 0.6, 26.0]], "Neutral"))
+    sample_data.append(([[1013.25, 0.1, 76.0, 1.0, 0.6, 28.0]], "Slightly Warm"))
     print()
     scikit_learn_classification_test(*sample_data)
     print("Elapsed time: {} seconds.".format((time.time() - start_time)))
