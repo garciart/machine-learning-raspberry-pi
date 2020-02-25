@@ -1,4 +1,4 @@
-"atmo_pres","air_speed","rel_humid","meta_rate","cloth_lvl","oper_temp","sens_desc"
+atmo_pres,air_speed,rel_humid,meta_rate,cloth_lvl,oper_temp,sens_desc
 1013.25,0.1,0.0,1.0,0.61,10.0,0
 1013.25,0.1,0.0,1.0,0.61,12.0,0
 1013.25,0.1,0.0,1.0,0.61,14.0,0
