@@ -41,9 +41,12 @@ def scikit_learn_classification_test(*sample_data):
     dataframe = pd.read_csv("thermal_comfort.csv")
     # Get feature_names from column headers: ["atmo_pres", "air_speed",
     #     "rel_humid", "meta_rate", "cloth_lvl", "oper_temp", "sens_desc"]
-    feature_names = dataframe.columns.values
+    column_names = dataframe.columns.values
+    feature_names = column_names[:-1]
+    print(len(feature_names))
+    label_name = column_names[-1]
     # Drop the column headers
-    dataframe.drop([0, 0])
+    # dataframe.drop([0, 0])
     # Assign names to the labels/classes
     class_names = ["Cold", "Cool", "Slightly Cool",
                    "Neutral", "Slightly Warm", "Warm", "Hot"]
@@ -61,8 +64,8 @@ def scikit_learn_classification_test(*sample_data):
     # Split the dataframe, then use 80% for training and 20% for testing
     # (as determined by test_size). Remove random_state for production.
     array = dataframe.values
-    feature_values = array[:, 0:6]
-    label_values = array[:, 6]
+    feature_values = array[:, 0:len(feature_names)]
+    label_values = array[:, len(feature_names)]
     x_train, x_validation, y_train, y_validation = train_test_split(
         feature_values, label_values, test_size=0.20, random_state=1)
 
