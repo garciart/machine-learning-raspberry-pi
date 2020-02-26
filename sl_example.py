@@ -1,7 +1,8 @@
-#!/usr/bin/python3
+#!python
 # -*- coding: utf-8 -*-
 
 """Thermal comfort predictor using Scikit Learn machine learning.
+#!/usr/bin/python3
 Python version used: 3.6.8
 See requirements.txt for additional dependencies
 Styling guide: PEP 8 -- Style Guide for Python Code
@@ -13,18 +14,21 @@ Styling guide: PEP 8 -- Style Guide for Python Code
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import time
+
+import numpy as np
 import pandas as pd
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-from sklearn.linear_model import (LogisticRegression, SGDClassifier)
+from sklearn.ensemble import (AdaBoostClassifier, ExtraTreesClassifier,
+                              GradientBoostingClassifier,
+                              RandomForestClassifier)
+from sklearn.linear_model import LogisticRegression, SGDClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.svm import (LinearSVC, SVC)
+from sklearn.svm import SVC, LinearSVC
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import (AdaBoostClassifier, ExtraTreesClassifier,
-                              GradientBoostingClassifier, RandomForestClassifier)
-import time
 
 # Module metadata dunders
 __author__ = "Rob Garcia"
@@ -37,29 +41,29 @@ def scikit_learn_classification_test(*sample_data):
     """Train, test, and run different classification estimators, selected from
     https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html
     """
+    # Limit decimal places to three and do not use scientific notation
+    np.set_printoptions(precision=3)
+    np.set_printoptions(suppress=True)
     # Read CSV dataset into a dataframe
     dataframe = pd.read_csv("thermal_comfort.csv")
     # Get feature_names from column headers: ["atmo_pres", "air_speed",
     #     "rel_humid", "meta_rate", "cloth_lvl", "oper_temp", "sens_desc"]
     column_names = dataframe.columns.values
     feature_names = column_names[:-1]
-    print(len(feature_names))
     label_name = column_names[-1]
-    # Drop the column headers
-    # dataframe.drop([0, 0])
     # Assign names to the labels/classes
     class_names = ["Cold", "Cool", "Slightly Cool",
                    "Neutral", "Slightly Warm", "Warm", "Hot"]
 
-    """Utility functions to verify dataframe
+    """Utility functions to verify dataframe"""
     print("Dataframe shape:", dataframe.shape)
     print("Data check (first 20 rows:):")
     print(dataframe.head(20))
     print("Dataframe feature descriptions:")
-    print(dataframe.describe())
+    print(dataframe.describe().round(3))
     print("Dataframe class distribution:")
     print(dataframe.groupby("sens_desc").size())
-    """
+    """ """
 
     # Split the dataframe, then use 80% for training and 20% for testing
     # (as determined by test_size). Remove random_state for production.
@@ -129,7 +133,7 @@ def main():
     print("scikit-learn Classification Test.")
     # Sample data to be evaluated
     sample_data = []
-    sample_data.append(([[1013.25, 0.1, 50.0, 1.0, 0.5, 23.0]], "Slightly Cool"))
+    sample_data.append(([[1013.25, 0.1, 50.0, 1.0, 0.6, 23.0]], "Slightly Cool"))
     sample_data.append(([[1013.25, 0.1, 60.0, 1.0, 0.6, 26.0]], "Neutral"))
     sample_data.append(([[1013.25, 0.1, 76.0, 1.0, 0.6, 28.0]], "Slightly Warm"))
     print()

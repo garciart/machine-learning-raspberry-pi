@@ -1,7 +1,8 @@
-#!/usr/bin/python3
+#!python
 # -*- coding: utf-8 -*-
 
 """Thermal comfort predictor using TensorFlow machine learning.
+#!/usr/bin/python3
 Python version used: 3.6.8
 TensorFlow version used: 1.15.2
 See requirements.txt for additional dependencies
@@ -9,6 +10,7 @@ Styling guide: PEP 8 -- Style Guide for Python Code
     (https://www.python.org/dev/peps/pep-0008/) and
     PEP 257 -- Docstring Conventions
     (https://www.python.org/dev/peps/pep-0257/)
+Ref: https://www.tensorflow.org/tutorials/estimator/premade
 """
 
 from __future__ import (absolute_import, division, print_function,
@@ -20,6 +22,7 @@ import time
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+from sklearn.utils import Bunch
 
 # Module metadata dunders
 __author__ = "Rob Garcia"
@@ -28,47 +31,59 @@ __email__ = "rgarcia@rgprogramming.com"
 __license__ = "MIT"
 
 
-def input_fn(features, labels=None, training=True, batch_size=1024):
+def input_fn(feature_dict, label_values=None, training=True, batch_size=256):
     """An overloaded input function for training, evaluating, and prediction"""
-    if labels is None:
+    if label_values is None:
         # Convert the inputs to a Dataset without labels.
-        return tf.data.Dataset.from_tensor_slices(dict(features)).batch(batch_size)
+        return tf.data.Dataset.from_tensor_slices(dict(feature_dict)).batch(batch_size)
 
     # Convert the inputs to a Dataset.
-    dataset = tf.data.Dataset.from_tensor_slices((dict(features), labels))
+    dataset = tf.data.Dataset.from_tensor_slices((dict(feature_dict), label_values))
     # Shuffle and repeat if you are in training mode.
     if training:
         dataset = dataset.shuffle(1000).repeat()
     return dataset.batch(batch_size)
 
 
-def tensorflow_classification_test(expected, predict_x):
+def tensorflow_classification_test(file_name, label_names, unlabeled_x, expected_y):
     """
     Implementation of TensorFlow premade estimators:
     https://www.tensorflow.org/tutorials/estimator/premade
     """
-    # Read CSV data into dataset
-    dataframe = pd.read_csv("thermal_comfort.csv")
-    # Get feature_names from column headers: ["atmo_pres", "air_speed",
-    #     "rel_humid", "meta_rate", "cloth_lvl", "oper_temp", "sens_desc"]
-    csv_column_names = dataframe.columns.values
-    feature_names = dataframe.columns.values[:-1]
-    # Drop the column headers
-    dataframe.drop([0, 0])
-    # Assign names to the labels/classes
-    class_names = ["Cold", "Cool", "Slightly Cool",
-                   "Neutral", "Slightly Warm", "Warm", "Hot"]
-    label_name = csv_column_names[-1]
+    print("TensorFlow version: {}".format(tf.__version__))
+    # Limit decimal places to three and do not use scientific notation
+    np.set_printoptions(precision=3)
+    np.set_printoptions(suppress=True)
+
+    # Import and parse the training dataset
+    # Broken down for tutorial. Can be optimized into fewer lines.
+    column_titles = []
+    feature_titles = []
+    label_title = ""
+    num_of_inputs = 0
+    num_of_outputs = len(label_names)
+    feature_values = []
+    label_values = []
+
+    with open(file_name) as csv_file:
+        dataframe = pd.read_csv(file_name, header=0)
+        column_titles = dataframe.columns.values
+        feature_titles = column_titles[:-1]
+        label_title = column_titles[-1]
+        num_of_inputs = len(feature_titles)
+        array = dataframe.values
+        feature_values = array[:, 0:num_of_inputs]
+        label_values = array[:, num_of_inputs]
 
     """
     # Utility functions to verify dataset
     print("Dataset shape:", dataframe.shape)
-    print("Data check (first 20 rows:):")
-    print(dataframe.head(20))
+    print("Data check (first 5 rows:):")
+    print(dataframe.head())
     print("Dataset feature descriptions:")
     print(dataframe.describe())
     print("Dataset class distribution:")
-    print(dataframe.groupby("sens_desc").size())
+    print(dataframe.groupby(label_title).size())
     """
 
     # Split the dataframe into a training set and test set (80:20 ratio)
@@ -77,8 +92,12 @@ def tensorflow_classification_test(expected, predict_x):
     test = dataframe[~msk]
 
     # Remove the sensation description from dataframe (i.e., the CLASSES)
-    train_y = train.pop("sens_desc")
-    test_y = test.pop("sens_desc")
+    train_y = train.pop(label_title)
+    test_y = test.pop(label_title)
+    print(train)
+    print(train_y)
+    print(test)
+    print(test_y)
 
     # Feature columns describe how to use the input.
     my_feature_columns = []
@@ -90,27 +109,30 @@ def tensorflow_classification_test(expected, predict_x):
     # two-hidden-layer feedforward networks. IEEE Transactions on Neural Networks,
     # 14(2), 274–281. doi:10.1109/tnn.2003.809401
     # Thanks to Arvis Sulovari of the University of Washington Seattle
-    m = len(class_names)
-    n = len(feature_names)
-    hidden_layer_1 = int(math.sqrt(((m + 2) * n)) + (2 * (math.sqrt(n / (m + 2)))))
-    hidden_layer_2 = int(m * (math.sqrt(n / (m + 2))))
+    hidden_layer_1 = int(round(math.sqrt(((num_of_outputs + 2) * num_of_inputs)) + (2 * (math.sqrt(num_of_inputs / (num_of_outputs + 2))))))
+    hidden_layer_2 = int(round(num_of_outputs * (math.sqrt(num_of_inputs / (num_of_outputs + 2)))))
+    print(num_of_inputs)
+    print(num_of_outputs)
+    print(hidden_layer_1)
+    print(hidden_layer_2)
+    """
     # A classifier for TensorFlow DNN models.
     classifier = tf.estimator.DNNClassifier(
         feature_columns=my_feature_columns,
         hidden_units=[hidden_layer_1, hidden_layer_2],
-        n_classes=7)
+        n_classes=num_of_outputs)
 
-    """
     # An estimator for TensorFlow Linear and DNN joined classification models.
     classifier = tf.estimator.DNNLinearCombinedClassifier(
         dnn_feature_columns=my_feature_columns,
         dnn_hidden_units=[hidden_layer_1, hidden_layer_2],
-        n_classes=7)
+        n_classes=num_of_outputs)
+    """
     # Linear classifier model.
     classifier = tf.estimator.LinearClassifier(
         feature_columns=my_feature_columns,
-        n_classes=7)
-    """
+        n_classes=num_of_outputs)
+
 
     # Train the Model.
     classifier.train(
@@ -123,32 +145,47 @@ def tensorflow_classification_test(expected, predict_x):
 
     # Generate predictions from the model
     predictions = classifier.predict(
-        input_fn=lambda: input_fn(predict_x))
+        input_fn=lambda: input_fn(unlabeled_x))
 
-    for pred_dict, expec in zip(predictions, expected):
+    for pred_dict, expec in zip(predictions, expected_y):
         class_id = pred_dict['class_ids'][0]
         probability = pred_dict['probabilities'][class_id]
 
         print('Prediction is "{}" ({:.1f}%), expected "{}"'.format(
-            class_names[class_id], 100 * probability, expec))
+            label_names[class_id], 100 * probability, expec))
 
 
 def main():
     """Application entry point."""
     start_time = time.time()
     # Sample data to be evaluated
-    expected = ["Slightly Cool", "Neutral", "Slightly Warm"]
-    predict_x = {
+    # file_name = "iris.csv"
+    file_name = "thermal_comfort.csv"
+    # label_names = ['Iris setosa', 'Iris versicolor', 'Iris virginica']
+    label_names = ["Cold", "Cool", "Slightly Cool",
+                   "Neutral", "Slightly Warm", "Warm", "Hot"]
+    # expected_y = ['Iris setosa', 'Iris versicolor', 'Iris virginica']
+    expected_y = ["Slightly Cool", "Neutral", "Slightly Warm"]
+    """
+    unlabeled_x = {
+        'sepal_length': [5.1, 5.9, 6.9],
+        'sepal_width': [3.3, 3.0, 3.1],
+        'petal_length': [1.7, 4.2, 5.4],
+        'petal_width': [0.5, 1.5, 2.1],
+    }
+    """
+    unlabeled_x = {
         "atmo_pres": [1013.25, 1013.25, 1013.25],
         "air_speed": [0.1, 0.1, 0.1],
         "rel_humid": [50.0, 60.0, 76.0],
         "meta_rate": [1.0, 1.0, 1.0],
-        "cloth_lvl": [0.5, 0.6, 0.6],
+        "cloth_lvl": [0.6, 0.6, 0.6],
         "oper_temp": [23.0, 26.0, 28.0],
     }
+
     print()
     print("TensorFlow Classification Test.\n")
-    tensorflow_classification_test(expected, predict_x)
+    tensorflow_classification_test(file_name, label_names, unlabeled_x, expected_y)
     print("Elapsed time: {} seconds.".format((time.time() - start_time)))
     print("Job complete. Have an excellent day.")
 
