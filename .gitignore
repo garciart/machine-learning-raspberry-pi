@@ -2,3 +2,7 @@
 /smart_sensor.egg-info
 /build
 /__pycache__
+/extra
+dataset.xlsx
+install.log
+notes.txt

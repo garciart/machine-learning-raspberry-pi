@@ -139,19 +139,15 @@ def tensorflow_classification_test(file_name, label_names, unlabeled_x):
     print("Final test set loss: {:4f}".format(results[0]))
     print("Final test set accuracy: {:4f}".format(results[1]))
 
-    # Make predictions for the unlabeled data
-    predictions = model.predict_classes(unlabeled_x, verbose=1)
-
-    return predictions
+    return model
 
 
 def main():
     """Application entry point."""
     start_time = time.time()
-
+    print("TensorFlow Classification Test using Keras.\n")
     # Sample data to be evaluated
 
-    """
     # Iris test
     file_name = "iris.csv"
     labels = ["Iris setosa", "Iris versicolor", "Iris virginica"]
@@ -171,11 +167,12 @@ def main():
         [1013.25, 0.1, 76.0, 1.0, 0.61, 28.0]
     ])
     expected_y = ["Slightly Cool", "Neutral", "Slightly Warm"]
-
-    print()
-    print("TensorFlow Classification Test using Keras.\n")
-    predictions = tensorflow_classification_test(
+    """
+    model = tensorflow_classification_test(
         file_name, labels, unlabeled_x)
+    # Make predictions for the unlabeled data
+    predictions = model.predict_classes(unlabeled_x, verbose=1)
+    print()
     for i in range(len(unlabeled_x)):
         print("X={}, Predicted: {} ({}), Expected {}".format(
             unlabeled_x[i], labels[predictions[i]], predictions[i], expected_y[i]))
