@@ -161,20 +161,15 @@ def tensorflow_classification_test(file_name, label_names, unlabeled_x):
 
     print("\nTest set accuracy: {accuracy:0.3f}\n".format(**eval_result))
 
-    # Generate predictions from the model
-    predictions = classifier.predict(
-        input_fn=lambda: input_fn(unlabeled_x))
-
-    return predictions
+    return classifier
 
 
 def main():
     """Application entry point."""
     start_time = time.time()
-
+    print("TensorFlow Classification Test using Premade Estimators.\n")
     # Sample data to be evaluated
 
-    """
     # Iris test
     file_name = "iris.csv"
     label_names = ["Iris setosa", "Iris versicolor", "Iris virginica"]
@@ -189,7 +184,7 @@ def main():
     file_name = "thermal_comfort.csv"
     label_names = ["Cold", "Cool", "Slightly Cool",
                    "Neutral", "Slightly Warm", "Warm", "Hot"]
-    expected_y = ["Slightly Cool", "Neutral", "Slightly Warm"]
+
     unlabeled_x = {
         "atmo_pres": [1013.25, 1013.25, 1013.25],
         "air_speed": [0.1, 0.1, 0.1],
@@ -198,11 +193,14 @@ def main():
         "cloth_lvl": [0.61, 0.61, 0.61],
         "oper_temp": [23.0, 26.0, 28.0],
     }
-
-    print()
-    print("TensorFlow Classification Test using Premade Estimators.\n")
-    predictions = tensorflow_classification_test(
+    expected_y = ["Slightly Cool", "Neutral", "Slightly Warm"]
+    """
+    classifier = tensorflow_classification_test(
         file_name, label_names, unlabeled_x)
+    # Generate predictions from the model
+    predictions = classifier.predict(
+        input_fn=lambda: input_fn(unlabeled_x))
+    print()
     for pred_dict, expec in zip(predictions, expected_y):
         class_id = pred_dict["class_ids"][0]
         probability = pred_dict["probabilities"][class_id]

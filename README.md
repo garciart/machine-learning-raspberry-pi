@@ -115,7 +115,7 @@ While this task would be easy to accomplish with simple if-else-then program, we
    pi@dex:~/SmartSensor $ pip3 install --no-cache-dir -r requirements.txt
    ```
 
-6. Once complete, verify scikit-learn, TensorFlow, and the sensors work (disregard any TensorFlow warnings for now):
+6. Once complete, verify scikit-learn, TensorFlow, and the sensors work (disregard any TensorFlow warnings for now). We recommend examining the code as it runs:
 
    ```linux
    pi@dex:~ /SmartSensor $ ./sensors_only_test.py
@@ -126,44 +126,46 @@ While this task would be easy to accomplish with simple if-else-then program, we
 
 7. Notice that the scikit-learn example ran faster (4.6 sec vs 14.4 and 13.5 sec) and was much more accurate than the TensorFlow scripts. We believe this is due to the dataset having six features, but with variations in only two of those features. If you run the scripts against the Iris dataset (remove the comments surrounding the Iris test and place them around the Thermal Comfort test), the accuracy of the TensorFlow scripts increases dramatically. However, for the S3, we will use the scikit classifiers.
 
-```linux
-scikit-learn Classification Test.
-...
-Running samples using Gradient Boosting Classifier
-(test score was 1.00%)...
-Sample #1: Prediction: Slightly Cool (expected Slightly Cool)
-Sample #2: Prediction: Neutral (expected Neutral)
-Sample #3: Prediction: Slightly Warm (expected Slightly Warm)
+   ```linux
+   scikit-learn Classification Test.
+   ...
+   Running samples using Gradient Boosting Classifier
+   (test score was 1.00%)...
+   Sample #1: Prediction: Slightly Cool (expected Slightly Cool)
+   Sample #2: Prediction: Neutral (expected Neutral)
+   Sample #3: Prediction: Slightly Warm (expected Slightly Warm)
 
-Running samples using Random Forest Classifier
-(test score was 1.00%)...
-Sample #1: Prediction: Slightly Cool (expected Slightly Cool)
-Sample #2: Prediction: Neutral (expected Neutral)
-Sample #3: Prediction: Slightly Warm (expected Slightly Warm)
-...
-Elapsed time: 4.682486534118652 seconds.
-Job complete. Have an excellent day.
-```
+   Running samples using Random Forest Classifier
+   (test score was 1.00%)...
+   Sample #1: Prediction: Slightly Cool (expected Slightly Cool)
+   Sample #2: Prediction: Neutral (expected Neutral)
+   Sample #3: Prediction: Slightly Warm (expected Slightly Warm)
+   ...
+   Elapsed time: 4.682486534118652 seconds.
+   Job complete. Have an excellent day.
+   ```
 
-```linux
-TensorFlow Classification Test using Premade Estimators.
-...
-Prediction is "Slightly Cool" (32.4%), expected "Slightly Cool"
-Prediction is "Warm" (51.3%), expected "Neutral"
-Prediction is "Warm" (85.8%), expected "Slightly Warm"
-Elapsed time: 14.417850971221924 seconds.
-Job complete. Have an excellent day.
-```
+   ```linux
+   TensorFlow Classification Test using Premade Estimators.
+   ...
+   Prediction is "Slightly Cool" (32.4%), expected "Slightly Cool"
+   Prediction is "Warm" (51.3%), expected "Neutral"
+   Prediction is "Warm" (85.8%), expected "Slightly Warm"
+   Elapsed time: 14.417850971221924 seconds.
+   Job complete. Have an excellent day.
+   ```
 
-```linux
-TensorFlow Classification Test using Keras.
-...
-X=[1013.25    0.1    50.      1.      0.61   23.  ], Predicted: Cool (1), Expected Slightly Cool
-X=[1013.25    0.1    60.      1.      0.61   26.  ], Predicted: Cool (1), Expected Neutral
-X=[1013.25    0.1    76.      1.      0.61   28.  ], Predicted: Cool (1), Expected Slightly Warm
-Elapsed time: 13.566766738891602 seconds.
-Job complete. Have an excellent day.
-```
+   ```linux
+   TensorFlow Classification Test using Keras.
+   ...
+   X=[1013.25    0.1    50.      1.      0.61   23.  ], Predicted: Cool (1), Expected Slightly Cool
+   X=[1013.25    0.1    60.      1.      0.61   26.  ], Predicted: Cool (1), Expected Neutral
+   X=[1013.25    0.1    76.      1.      0.61   28.  ], Predicted: Cool (1), Expected Slightly Warm
+   Elapsed time: 13.566766738891602 seconds.
+   Job complete. Have an excellent day.
+   ```
+
+8. Our next step is to connect the sensors and test that they are working.
 
 ## Additional Information
 
