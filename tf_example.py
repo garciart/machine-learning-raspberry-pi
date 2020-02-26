@@ -20,9 +20,7 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 from keras.layers import Dense
-from keras.losses import *
 from keras.models import Sequential
-from keras.optimizers import *
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.utils import Bunch
@@ -34,13 +32,13 @@ __email__ = "rgarcia@rgprogramming.com"
 __license__ = "MIT"
 
 
-def tensorflow_classification_test(file_name, labels, unlabeled_x, expected_y):
+def tensorflow_classification_test(file_name, label_names, unlabeled_x):
     """Classification function using Keras and TensorFlow
 
     :param file_name: The name of the csv file with the data.
     :type file_name: str
-    :param labels: Exception details from sys module.
-    :type labels: list
+    :param label_names: The list of labels.
+    :type label_names: list
     :param unlabeled_x: Unlabeled data to be classified.
     :type unlabeled_x: tuple
     :param expected_y: The expected results of classifying the unlabeled data.
@@ -57,17 +55,17 @@ def tensorflow_classification_test(file_name, labels, unlabeled_x, expected_y):
     # Broken down for tutorial. Can be optimized into fewer lines.
     column_names = []
     feature_names = []
-    label_name = ""
+    # label_name = ""
     num_of_inputs = 0
-    num_of_outputs = len(labels)
+    num_of_outputs = len(label_names)
     feature_values = []
     label_values = []
 
     with open(file_name) as csv_file:
-        dataframe = pd.read_csv(file_name, header=0)
+        dataframe = pd.read_csv(csv_file, header=0)
         column_names = dataframe.columns.values
         feature_names = column_names[:-1]
-        label_name = column_names[-1]
+        # label_name = column_names[-1]
         num_of_inputs = len(feature_names)
         array = dataframe.values
         feature_values = array[:, 0:num_of_inputs]
@@ -75,23 +73,23 @@ def tensorflow_classification_test(file_name, labels, unlabeled_x, expected_y):
 
     dataset = Bunch(data=feature_values, target=label_values)
 
-    x = dataset.data
-    # Break down and assign list of label values to x value
-    y_ = dataset.target.reshape(-1, 1)
+    x_values = dataset.data
+    # Break down target array into multidimensional list of label values
+    y_raw = dataset.target.reshape(-1, 1)
 
     # One hot encode the labels
     encoder = OneHotEncoder(sparse=False)
-    y = encoder.fit_transform(y_)
+    y_values = encoder.fit_transform(y_raw)
 
     # Split the data into training and test sets using a 80:20 ratio.
-    train_x, test_x, train_y, test_y = train_test_split(x, y, test_size=0.20)
+    train_x, test_x, train_y, test_y = train_test_split(x_values, y_values, test_size=0.20)
 
     # Build the model
     model = Sequential()
     model.add(Dense(10, input_shape=(num_of_inputs,),
-                    activation='relu', name='fc1'))
-    model.add(Dense(10, activation='relu', name='fc2'))
-    model.add(Dense(num_of_outputs, activation='softmax', name='output'))
+                    activation="relu", name="fc1"))
+    model.add(Dense(10, activation="relu", name="fc2"))
+    model.add(Dense(num_of_outputs, activation="softmax", name="output"))
 
     """
     Select an optimizer and loss function.
@@ -103,7 +101,7 @@ def tensorflow_classification_test(file_name, labels, unlabeled_x, expected_y):
     Adagrad - Adagrad optimizer.
     Adadelta - Adadelta optimizer.
     Adam - Adam optimizer.
-    Adamax - Adamax optimizer from Adam paper's Section 7.
+    Adamax - Adamax optimizer from Adam papers Section 7.
     Nadam - Nesterov Adam optimizer.
 
     Keras losses (https://keras.io/losses/)
@@ -125,12 +123,12 @@ def tensorflow_classification_test(file_name, labels, unlabeled_x, expected_y):
     is_categorical_crossentropy
     """
 
-    optimizer = 'Adamax'
-    loss = 'mean_squared_error'
-    model.compile(optimizer, loss, metrics=['accuracy'])
+    optimizer = "SGD"
+    loss = "mean_squared_error"
+    model.compile(optimizer, loss, metrics=["accuracy"])
 
-    # print('Neural Network Model Summary:')
-    # print(model.summary())
+    print("Neural Network Model Summary:")
+    print(model.summary())
 
     # Train the model
     model.fit(train_x, train_y, verbose=2, batch_size=32, epochs=256)
@@ -138,8 +136,8 @@ def tensorflow_classification_test(file_name, labels, unlabeled_x, expected_y):
     # Test the model
     results = model.evaluate(test_x, test_y)
 
-    # print('Final test set loss: {:4f}'.format(results[0]))
-    # print('Final test set accuracy: {:4f}'.format(results[1]))
+    print("Final test set loss: {:4f}".format(results[0]))
+    print("Final test set accuracy: {:4f}".format(results[1]))
 
     # Make predictions for the unlabeled data
     predictions = model.predict_classes(unlabeled_x, verbose=1)
@@ -153,41 +151,31 @@ def main():
 
     # Sample data to be evaluated
 
-    # file_name = "iris.csv"
-    file_name = "thermal_comfort.csv"
-
-    # labels = ['Iris setosa', 'Iris versicolor', 'Iris virginica']
-    labels = ["Cold", "Cool", "Slightly Cool",
-              "Neutral", "Slightly Warm", "Warm", "Hot"]
-
     """
+    # Iris test
+    file_name = "iris.csv"
+    labels = ["Iris setosa", "Iris versicolor", "Iris virginica"]
     unlabeled_x = np.array([
-        [5.9, 3.0, 4.2, 1.5,],
-        [5.1, 3.3, 1.7, 0.5,],
+        [5.9, 3.0, 4.2, 1.5],
+        [5.1, 3.3, 1.7, 0.5],
         [6.9, 3.1, 5.4, 2.1]
     ])
+    expected_y = ["Iris versicolor", "Iris setosa", "Iris virginica"]
     """
+    file_name = "thermal_comfort.csv"
+    labels = ["Cold", "Cool", "Slightly Cool",
+              "Neutral", "Slightly Warm", "Warm", "Hot"]
     unlabeled_x = np.array([
-        [1013.25, 0.1, 50.0, 1.0, 0.6, 23.0],
-        [1013.25, 0.1, 60.0, 1.0, 0.6, 26.0],
-        [1013.25, 0.1, 76.0, 1.0, 0.6, 28.0]
+        [1013.25, 0.1, 50.0, 1.0, 0.61, 23.0],
+        [1013.25, 0.1, 60.0, 1.0, 0.61, 26.0],
+        [1013.25, 0.1, 76.0, 1.0, 0.61, 28.0]
     ])
-
-    """
-    unlabeled_x = np.array([
-        [1013.25, 0.1, 25.0, 1.0, 0.6, 20.0],
-        [1013.25, 0.1, 50.0, 1.0, 0.6, 25.0],
-        [1013.25, 0.1, 75.0, 1.0, 0.6, 30.0]
-    ])
-    """
-    # expected_y = ['Iris versicolor', 'Iris setosa', 'Iris virginica']
     expected_y = ["Slightly Cool", "Neutral", "Slightly Warm"]
-    # expected_y = ["Cool", "Neutral", "Warm"]
 
     print()
-    print("TensorFlow Classification Test.\n")
+    print("TensorFlow Classification Test using Keras.\n")
     predictions = tensorflow_classification_test(
-        file_name, labels, unlabeled_x, expected_y)
+        file_name, labels, unlabeled_x)
     for i in range(len(unlabeled_x)):
         print("X={}, Predicted: {} ({}), Expected {}".format(
             unlabeled_x[i], labels[predictions[i]], predictions[i], expected_y[i]))

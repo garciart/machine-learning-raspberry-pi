@@ -40,6 +40,8 @@ __license__ = "MIT"
 def scikit_learn_classification_test(*sample_data):
     """Train, test, and run different classification estimators, selected from
     https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html
+    :param sample_data: The data to be analyzed.
+    :type sample_data: tuple
     """
     # Limit decimal places to three and do not use scientific notation
     np.set_printoptions(precision=3)
@@ -133,9 +135,9 @@ def main():
     print("scikit-learn Classification Test.")
     # Sample data to be evaluated
     sample_data = []
-    sample_data.append(([[1013.25, 0.1, 50.0, 1.0, 0.6, 23.0]], "Slightly Cool"))
-    sample_data.append(([[1013.25, 0.1, 60.0, 1.0, 0.6, 26.0]], "Neutral"))
-    sample_data.append(([[1013.25, 0.1, 76.0, 1.0, 0.6, 28.0]], "Slightly Warm"))
+    sample_data.append(([[1013.25, 0.1, 50.0, 1.0, 0.61, 23.0]], "Slightly Cool"))
+    sample_data.append(([[1013.25, 0.1, 60.0, 1.0, 0.61, 26.0]], "Neutral"))
+    sample_data.append(([[1013.25, 0.1, 76.0, 1.0, 0.61, 28.0]], "Slightly Warm"))
     print()
     scikit_learn_classification_test(*sample_data)
     print("Elapsed time: {} seconds.".format((time.time() - start_time)))
