@@ -51,11 +51,11 @@ def tensorflow_classification_test(file_name, label_names, unlabeled_x):
     np.set_printoptions(precision=3)
     np.set_printoptions(suppress=True)
 
-    # Import and parse the training dataset
+    # Import and parse the dataset
     # Broken down for tutorial. Can be optimized into fewer lines.
-    column_names = []
-    feature_names = []
-    # label_name = ""
+    column_titles = []
+    feature_titles = []
+    # label_title = ""
     num_of_inputs = 0
     num_of_outputs = len(label_names)
     feature_values = []
@@ -63,13 +63,13 @@ def tensorflow_classification_test(file_name, label_names, unlabeled_x):
 
     with open(file_name) as csv_file:
         dataframe = pd.read_csv(csv_file, header=0)
-        column_names = dataframe.columns.values
-        feature_names = column_names[:-1]
-        # label_name = column_names[-1]
-        num_of_inputs = len(feature_names)
-        array = dataframe.values
-        feature_values = array[:, 0:num_of_inputs]
-        label_values = array[:, num_of_inputs]
+        column_titles = dataframe.columns.values
+        feature_titles = column_titles[:-1]
+        # label_title = column_titles[-1]
+        num_of_inputs = len(feature_titles)
+        values = dataframe.values
+        feature_values = values[:, 0:num_of_inputs]
+        label_values = values[:, num_of_inputs]
 
     dataset = Bunch(data=feature_values, target=label_values)
 
@@ -150,7 +150,7 @@ def main():
 
     # Iris test
     file_name = "iris.csv"
-    labels = ["Iris setosa", "Iris versicolor", "Iris virginica"]
+    label_names = ["Iris setosa", "Iris versicolor", "Iris virginica"]
     unlabeled_x = np.array([
         [5.9, 3.0, 4.2, 1.5],
         [5.1, 3.3, 1.7, 0.5],
@@ -169,13 +169,13 @@ def main():
     expected_y = ["Slightly Cool", "Neutral", "Slightly Warm"]
     """
     model = tensorflow_classification_test(
-        file_name, labels, unlabeled_x)
+        file_name, label_names, unlabeled_x)
     # Make predictions for the unlabeled data
     predictions = model.predict_classes(unlabeled_x, verbose=1)
     print()
     for i in range(len(unlabeled_x)):
         print("X={}, Predicted: {} ({}), Expected {}".format(
-            unlabeled_x[i], labels[predictions[i]], predictions[i], expected_y[i]))
+            unlabeled_x[i], label_names[predictions[i]], predictions[i], expected_y[i]))
     print("Elapsed time: {} seconds.".format((time.time() - start_time)))
     print("Job complete. Have an excellent day.")
 
