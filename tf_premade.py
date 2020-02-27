@@ -79,7 +79,7 @@ def tensorflow_classification_test(file_name, label_names, unlabeled_x):
     np.set_printoptions(precision=3)
     np.set_printoptions(suppress=True)
 
-    # Import and parse the training dataset
+    # Import and parse the dataset
     # Broken down for tutorial. Can be optimized into fewer lines.
     column_titles = []
     feature_titles = []
@@ -95,9 +95,9 @@ def tensorflow_classification_test(file_name, label_names, unlabeled_x):
         feature_titles = column_titles[:-1]
         label_title = column_titles[-1]
         num_of_inputs = len(feature_titles)
-        # array = dataframe.values
-        # feature_values = array[:, 0:num_of_inputs]
-        # label_values = array[:, num_of_inputs]
+        # values = dataframe.values
+        # feature_values = values[:, 0:num_of_inputs]
+        # label_values = values[:, num_of_inputs]
 
     """
     # Utility functions to verify dataset

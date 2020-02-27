@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-"""Smart Sensor: ASHRAE Environmental Monitoring System.
+"""Sensor and LCD output test.
 Python version used: 3.6.8
 See requirements.txt for additional dependencies
 Styling guide: PEP 8 -- Style Guide for Python Code

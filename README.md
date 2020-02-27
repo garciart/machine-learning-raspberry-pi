@@ -115,16 +115,39 @@ While this task would be easy to accomplish with simple if-else-then program, we
    pi@dex:~/SmartSensor $ pip3 install --no-cache-dir -r requirements.txt
    ```
 
-6. Once complete, verify scikit-learn, TensorFlow, and the sensors work (disregard any TensorFlow warnings for now). We recommend examining the code as it runs:
+6. Our next step is to test the sensors:
+
+   - Connect them as follows:
+
+     - DHT (11 or 22) to digital port 7
+     - RGB LCD to I2C port 2
+     - Green LED to digital port 5
+     - Red LED to digital port 6
+
+   ![GrovePi Connections](smart_sensor_01.png "GrovePi Connections")
+
+   - Once they are connected, run the following command:
 
    ```linux
-   pi@dex:~ /SmartSensor $ ./sensors_only_test.py
+   pi@dex:~ /SmartSensor $ ./sensors_test.py
+   ```
+
+   - We should see results similar to the following, but with different values for temperature and humidity:
+
+   ```linux
+   pi@dex:~ /SmartSensor $ Temperature: 20.5C | Humidity: 30%
+   ```
+
+7. Once the sensor test is complete, verify scikit-learn, TensorFlow, and the sensors work (disregard any TensorFlow warnings for now). We recommend examining the code as it runs:
+
+   ```linux
+   pi@dex:~ /SmartSensor $ ./sensors_test.py
    pi@dex:~ /SmartSensor $ ./tf_premade.py
    pi@dex:~ /SmartSensor $ ./sl_example.py
    pi@dex:~ /SmartSensor $ ./tf_example.py
    ```
 
-7. Notice that the scikit-learn example ran faster (4.6 sec vs 14.4 and 13.5 sec) and was much more accurate than the TensorFlow scripts. We believe this is due to the dataset having six features, but with variations in only two of those features. If you run the scripts against the Iris dataset (remove the comments surrounding the Iris test and place them around the Thermal Comfort test), the accuracy of the TensorFlow scripts increases dramatically. However, for the S3, we will use the scikit classifiers.
+8. Notice that the scikit-learn example ran faster (4.6 sec vs 14.4 and 13.5 sec) and was much more accurate than the TensorFlow scripts. We believe this is due to the dataset having six features, but with variations in only two of those features. If you run the scripts against the Iris dataset (remove the comments surrounding the Iris test and place them around the Thermal Comfort test), the accuracy of the TensorFlow scripts increases dramatically. However, for the S3, we will use the scikit classifiers.
 
    ```linux
    scikit-learn Classification Test.
@@ -165,7 +188,7 @@ While this task would be easy to accomplish with simple if-else-then program, we
    Job complete. Have an excellent day.
    ```
 
-8. Our next step is to connect the sensors and test that they are working.
+9. Finally, we'll put everything together:
 
 ## Additional Information
 

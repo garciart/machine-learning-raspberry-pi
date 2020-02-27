@@ -37,7 +37,7 @@ __email__ = "rgarcia@rgprogramming.com"
 __license__ = "MIT"
 
 
-def scikit_learn_classification_test(*sample_data):
+def scikit_learn_classification_test(file_name, label_names, *unlabeled_x):
     """Train, test, and run different classification estimators, selected from
     https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html
     :param sample_data: The data to be analyzed.
@@ -46,18 +46,28 @@ def scikit_learn_classification_test(*sample_data):
     # Limit decimal places to three and do not use scientific notation
     np.set_printoptions(precision=3)
     np.set_printoptions(suppress=True)
-    # Read CSV dataset into a dataframe
-    dataframe = pd.read_csv("thermal_comfort.csv")
-    # Get feature_names from column headers: ["atmo_pres", "air_speed",
-    #     "rel_humid", "meta_rate", "cloth_lvl", "oper_temp", "sens_desc"]
-    column_names = dataframe.columns.values
-    feature_names = column_names[:-1]
-    label_name = column_names[-1]
-    # Assign names to the labels/classes
-    class_names = ["Cold", "Cool", "Slightly Cool",
-                   "Neutral", "Slightly Warm", "Warm", "Hot"]
 
-    """Utility functions to verify dataframe"""
+    # Import and parse the training dataset
+    # Broken down for tutorial. Can be optimized into fewer lines.
+    column_titles = []
+    feature_titles = []
+    label_title = ""
+    num_of_inputs = 0
+    num_of_outputs = len(label_names)
+    feature_values = []
+    label_values = []
+
+    with open(file_name) as csv_file:
+        dataframe = pd.read_csv(csv_file, header=0)
+        column_titles = dataframe.columns.values
+        feature_titles = column_titles[:-1]
+        label_title = column_titles[-1]
+        num_of_inputs = len(feature_titles)
+        values = dataframe.values
+        feature_values = values[:, 0:num_of_inputs]
+        label_values = values[:, num_of_inputs]
+
+    """Utility functions to verify dataframe
     print("Dataframe shape:", dataframe.shape)
     print("Data check (first 20 rows:):")
     print(dataframe.head(20))
@@ -65,13 +75,10 @@ def scikit_learn_classification_test(*sample_data):
     print(dataframe.describe().round(3))
     print("Dataframe class distribution:")
     print(dataframe.groupby("sens_desc").size())
-    """ """
+    """
 
     # Split the dataframe, then use 80% for training and 20% for testing
     # (as determined by test_size). Remove random_state for production.
-    array = dataframe.values
-    feature_values = array[:, 0:len(feature_names)]
-    label_values = array[:, len(feature_names)]
     x_train, x_validation, y_train, y_validation = train_test_split(
         feature_values, label_values, test_size=0.20, random_state=1)
 
@@ -114,7 +121,7 @@ def scikit_learn_classification_test(*sample_data):
     print()
     
     print("Data to be evaluated:")
-    for i, (data, expected_label) in enumerate(sample_data, start=1):
+    for i, (data, expected_label) in enumerate(unlabeled_x, start=1):
         print("Sample #{}: {} = {}".format(i, data, expected_label))
     print()
 
@@ -123,9 +130,9 @@ def scikit_learn_classification_test(*sample_data):
         print("Running samples using {0}\n(test score was {1:.2f}%)...".format(
             name, score))
         model = classifier.fit(feature_values, label_values)
-        for j, (data, expected_label) in enumerate(sample_data, start=1):
+        for j, (data, expected_label) in enumerate(unlabeled_x, start=1):
             print("Sample #{}: Prediction: {} (expected {})".format(
-                j, class_names[int(model.predict(data))], expected_label))
+                j, label_names[int(model.predict(data))], expected_label))
         print()
 
 
@@ -134,12 +141,16 @@ def main():
     start_time = time.time()
     print("scikit-learn Classification Test.")
     # Sample data to be evaluated
-    sample_data = []
-    sample_data.append(([[1013.25, 0.1, 50.0, 1.0, 0.61, 23.0]], "Slightly Cool"))
-    sample_data.append(([[1013.25, 0.1, 60.0, 1.0, 0.61, 26.0]], "Neutral"))
-    sample_data.append(([[1013.25, 0.1, 76.0, 1.0, 0.61, 28.0]], "Slightly Warm"))
+    file_name = "thermal_comfort.csv"
+    label_names = ["Cold", "Cool", "Slightly Cool",
+                   "Neutral", "Slightly Warm", "Warm", "Hot"]
+    unlabeled_x = []
+    unlabeled_x.append(([[1013.25, 0.1, 50.0, 1.0, 0.61, 23.0]], "Slightly Cool"))
+    unlabeled_x.append(([[1013.25, 0.1, 60.0, 1.0, 0.61, 26.0]], "Neutral"))
+    unlabeled_x.append(([[1013.25, 0.1, 76.0, 1.0, 0.61, 28.0]], "Slightly Warm"))
+    # expected_y = ["Slightly Cool", "Neutral", "Slightly Warm"]
     print()
-    scikit_learn_classification_test(*sample_data)
+    scikit_learn_classification_test(file_name, label_names, *unlabeled_x)
     print("Elapsed time: {} seconds.".format((time.time() - start_time)))
     print("Job complete. Have an excellent day.")
 
