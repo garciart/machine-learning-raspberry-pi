@@ -33,7 +33,7 @@ DHT_SENSOR_PORT = 7  # Digital port 7
 ON = 1
 OFF = 0
 
-def sensors_only_test():
+def sensor_test():
     """Collects and displays temperature and humidity data"""
     sensor_data = []
 
@@ -57,7 +57,7 @@ def sensors_only_test():
                     t_str = str(temp)
                     h_str = str(humid)
                     print("Temperature: {}C | Humidity: {}%".format(t_str, h_str))
-                    grove_rgb_lcd.setText_norefresh("Temp: {} C\nHumidity: {} %".format(t_str, h_str))
+                    grove_rgb_lcd.setText_norefresh("T: {} C\nH: {} %".format(temp, humid))
                     sensor_data.append([temp, humid])
                 # For DHT22, wait three seconds before next reading
                 time.sleep(3)
@@ -78,14 +78,14 @@ def shutdown_board():
     grovepi.digitalWrite(RED_LED, OFF)
     grovepi.digitalWrite(GREEN_LED, OFF)
     grove_rgb_lcd.setRGB(0, 0, 0)
-    grove_rgb_lcd.setText_norefresh("")
+    grove_rgb_lcd.setText("")
     print("Job complete. Have an excellent day.")
 
 
 def main():
     """Application entry point."""
     print("Test of the GrovePi DHT sensor, LEDs and RGB LCD screen.\n")
-    sensors_only_test()
+    sensor_test()
 
 
 if __name__ == "__main__":

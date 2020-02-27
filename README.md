@@ -1,5 +1,7 @@
 # Smart Sensor
 
+![Smart Sensor Animation](smart_sensor.gif "Smart Sensor Animation")
+
 > ***DISCLAIMER** - This repository and its contents are not endorsed by, sponsored by, affiliated with, nor associated with the National Aeronautics and Space Administration (NASA). This repository is only a demonstration of some of the concepts that I explored while I was an intern at NASA's Langley Research Center.*
 
 - [Introduction](#introduction)
@@ -189,6 +191,8 @@ While this task would be easy to accomplish with simple if-else-then program, we
    ```
 
 9. Finally, we'll put everything together:
+
+   ![Smart Sensor Animation](smart_sensor.gif "Smart Sensor Animation")
 
 ## Additional Information
 

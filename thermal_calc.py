@@ -1,8 +1,7 @@
-#!python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
 """Thermal data generator.
-#!/usr/bin/python3
 Python version used: 3.6.8
 Required package(s): pythermalcomfort
 Styling guide: PEP 8 -- Style Guide for Python Code
