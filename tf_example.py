@@ -1,8 +1,7 @@
-#!python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
 """Thermal comfort predictor using Keras and TensorFlow.
-#!/usr/bin/python3
 Python version used: 3.6.8
 See requirements.txt for additional dependencies
 Styling guide: PEP 8 -- Style Guide for Python Code

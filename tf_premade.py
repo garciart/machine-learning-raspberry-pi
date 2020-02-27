@@ -1,8 +1,7 @@
-#!python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
 """Thermal comfort predictor using TensorFlow machine learning.
-#!/usr/bin/python3
 Python version used: 3.6.8
 TensorFlow version used: 1.15.2
 See requirements.txt for additional dependencies
