@@ -39,8 +39,12 @@ __license__ = "MIT"
 def scikit_learn_classification_test(file_name, label_names, *unlabeled_x):
     """Train, test, and run different classification estimators, selected from
     https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html
+    :param file_name: The name of the csv file with the data.
+    :type file_name: str
+    :param label_names: The list of labels.
+    :type label_names: list
     :param sample_data: The data to be analyzed.
-    :type sample_data: tuple
+    :type sample_data: list of tuples
     """
     # Limit decimal places to three and do not use scientific notation
     np.set_printoptions(precision=3)
