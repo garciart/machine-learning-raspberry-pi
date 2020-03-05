@@ -11,8 +11,7 @@ Styling guide: PEP 8 -- Style Guide for Python Code
     (https://www.python.org/dev/peps/pep-0257/)
 """
 
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import (absolute_import, division, print_function, unicode_literals)
 
 import math
 import time
@@ -20,9 +19,7 @@ import socket
 import numpy as np
 import pandas as pd
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-from sklearn.ensemble import (AdaBoostClassifier, ExtraTreesClassifier,
-                              GradientBoostingClassifier,
-                              RandomForestClassifier)
+from sklearn.ensemble import (AdaBoostClassifier, ExtraTreesClassifier, GradientBoostingClassifier, RandomForestClassifier)
 from sklearn.linear_model import LogisticRegression, SGDClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
@@ -103,29 +100,22 @@ def prepare_model(file_name, label_names):
 
     # Split the dataframe, then use 80% for training and 20% for testing
     # (as determined by test_size). Remove random_state for production.
-    x_train, x_validation, y_train, y_validation = train_test_split(
-        feature_values, label_values, test_size=0.20, random_state=1)
+    x_train, x_validation, y_train, y_validation = train_test_split(feature_values, label_values, test_size=0.20, random_state=1)
 
     # Create tuple of estimators
     estimators = []
-    estimators.append(("Logistic Regression", LogisticRegression(
-        solver="liblinear", multi_class="ovr")))
-    estimators.append(
-        ("Linear Support Vector Classification (LinearSVC)", LinearSVC(dual=False)))
+    estimators.append(("Logistic Regression", LogisticRegression(solver="liblinear", multi_class="ovr")))
+    estimators.append(("Linear Support Vector Classification (LinearSVC)", LinearSVC(dual=False)))
     estimators.append(("Stochastic Gradient Descent (SGD)", SGDClassifier()))
-    estimators.append(
-        ("k-Nearest Neighbors Classifier (k-NN)", KNeighborsClassifier()))
-    estimators.append(("Support Vector Classification (SVC)",
-                       SVC(kernel="linear", C=1.0)))
+    estimators.append(("k-Nearest Neighbors Classifier (k-NN)", KNeighborsClassifier()))
+    estimators.append(("Support Vector Classification (SVC)", SVC(kernel="linear", C=1.0)))
     estimators.append(("Gaussian Naive Bayes (GaussianNB)", GaussianNB()))
     estimators.append(("Random Forest Classifier", RandomForestClassifier()))
     estimators.append(("Extra Trees Classifier", ExtraTreesClassifier()))
     estimators.append(("Decision Tree Classifier", DecisionTreeClassifier()))
     estimators.append(("AdaBoost Classifier", AdaBoostClassifier()))
-    estimators.append(("Gradient Boosting Classifier",
-                       GradientBoostingClassifier()))
-    estimators.append(("Linear Discriminant Analysis (LDA)",
-                       LinearDiscriminantAnalysis()))
+    estimators.append(("Gradient Boosting Classifier", GradientBoostingClassifier()))
+    estimators.append(("Linear Discriminant Analysis (LDA)", LinearDiscriminantAnalysis()))
 
     # Evaluate the accuracy of each estimator (limited to classifiers)
     results = []
@@ -169,8 +159,7 @@ def check_model(label_names, selected_model):
     # Run unlabeled data against selected model and check accuracy
     print("Prediction(s):")
     for j, (data, expected_label) in enumerate(unlabeled_x, start=1):
-        print("Sample #{}: Prediction: {} (expected {})".format(
-            j, label_names[int(selected_model[1].predict(data))], expected_label))
+        print("Sample #{}: Prediction: {} (expected {})".format(j, label_names[int(selected_model[1].predict(data))], expected_label))
 
 
 def get_data(s, command_for_client):
@@ -244,8 +233,7 @@ def main():
     print("Starting Smart Sensor Server...\n")
 
     file_name = "thermal_comfort.csv"
-    label_names = ["Cold", "Cool", "Slightly Cool",
-                   "Neutral", "Slightly Warm", "Warm", "Hot"]
+    label_names = ["Cold", "Cool", "Slightly Cool", "Neutral", "Slightly Warm", "Warm", "Hot"]
     start_time = time.time()
 
     print("Training and testing model...")
@@ -270,7 +258,7 @@ def main():
             print("Processing sensor data...")
             process_sensor_data(label_names, selected_model, sensor_data)
             print()
-           # Terminate client and collection
+            # Terminate client and collection
         get_data(s, "terminate")
     print("Shutting down board...")
     shutdown_board()
