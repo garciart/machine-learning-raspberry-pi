@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """Smart Sensor: ASHRAE Environmental Monitoring System.
+usage: sudo ./smart_sensor.py
 Python version used: 3.6.8
 See requirements.txt for additional dependencies
 Styling guide: PEP 8 -- Style Guide for Python Code
@@ -217,7 +218,7 @@ def collect_sensor_data():
                 grove_rgb_lcd.setRGB(127, 127, 127)
                 grove_rgb_lcd.setText_norefresh("Tmp: {} C\nHmd: {} %".format(t_str, h_str))
                 sensor_data.append(([[1013.25, 0.1, humid, 1.0, 0.61, temp]]))
-            # For DHT22, wait three seconds before next reading
+            # For DHT11, wait three seconds before next reading
             time.sleep(3)
             grove_rgb_lcd.setRGB(0, 0, 0)
     except (IOError, TypeError) as ex:

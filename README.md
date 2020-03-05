@@ -78,7 +78,7 @@ While this task would be easy to accomplish with simple if-else-then program, we
 
 ## Steps
 
-1. Install Raspbian for Robots on an SD card for the Raspberry Pi by following the instructions at [https://www.dexterindustries.com/howto/install-raspbian-for-robots-image-on-an-sd-card/](https://www.dexterindustries.com/howto/install-raspbian-for-robots-image-on-an-sd-card/) to install Dexter Industries' version of Raspbian on your Raspberry Pi. 
+1. Install Raspbian for Robots on an SD card for the Raspberry Pi by following the instructions at [https://www.dexterindustries.com/howto/install-raspbian-for-robots-image-on-an-sd-card/](https://www.dexterindustries.com/howto/install-raspbian-for-robots-image-on-an-sd-card/) to install Dexter Industries' version of Raspbian on your Raspberry Pi.
 
 2. Set up the Raspberry Pi with the GrovePi HAT:
 
@@ -149,7 +149,7 @@ While this task would be easy to accomplish with simple if-else-then program, we
    pi@dex:~ /SmartSensor $ ./tf_example.py
    ```
 
-8. Notice that the scikit-learn example ran faster (4.6 sec vs 14.4 and 13.5 sec) and was much more accurate than the TensorFlow scripts. We believe this is due to the dataset having six features, but with variations in only two of those features. If you run the scripts against the Iris dataset (remove the comments surrounding the Iris test and place them around the Thermal Comfort test), the accuracy of the TensorFlow scripts increases dramatically. However, for the S3, we will use the scikit classifiers.
+8. Notice that the scikit-learn example (sl_example.py) ran faster (4.6 sec vs 14.4 and 13.5 sec) and was much more accurate than the TensorFlow scripts (tf_premade.py and tf_example.py). We believe this is due to the dataset having six features, but with variations in only two of those features. If you run the scripts against the Iris dataset (remove the comments surrounding the Iris test and place them around the Thermal Comfort test), the accuracy of the TensorFlow scripts increases dramatically. However, for the S3, we will use the scikit classifiers.
 
    ```linux
    scikit-learn Classification Test.
@@ -190,9 +190,65 @@ While this task would be easy to accomplish with simple if-else-then program, we
    Job complete. Have an excellent day.
    ```
 
-9. Finally, we'll put everything together:
+9. Finally, we'll put everything together in smart_sensor.py:
 
    ![Smart Sensor Animation](smart_sensor.gif "Smart Sensor Animation")
+
+   - Test the Sensors (Optional) - First, we will make sure all the sensors and actuators work. In our case, the sensor is the DHT-11, and the actuators are the two LEDs and the RGB LCD. For production, you may remove this code if you like.
+
+   - Prepare the Model: Next, we will train all the classifiers as we did in sl_example.py. We will then pick the most accurate classifier for our model and retrain it against the whole data set. You will not get the same classifier all the time; during our test runs, we used the Extra Trees, the Gradient Boosting, and the Random Forest classifiers.
+
+   - Check the Model (Optional): This is another optional step; We will check the accuracy of the selected model against some sample data. By the way, even though the data is unlabeled, we know what the resulting predictions should be. Once again, for production, you may remove this code if you like.
+
+   - Collect Sensor Data: This is GrovePi specific code. We collect three samples of temperature and humidity from the DHT sensor, reformat it into a list of tuples, and send it for processing.
+
+   - Process Sensor Data: Here, we run the collected data against the selected model. We collect the results, average them together, and make a determination of the conditions in the room based on the ASHRAE 7-point scale for thermal comfort.
+
+   - Finally, we shutdown the sensors and actuators to extend their working life.
+
+   - Here are the results of a sample run:
+
+   ```linux
+   pi@dex:~ /SmartSensor $ ./smart_sensor.py
+   Smart Sensor Application.
+
+   Testing sensors...
+   Temperature: 22.0C | Humidity: 45.0%
+   Temperature: 22.0C | Humidity: 44.0%
+   Temperature: 22.0C | Humidity: 44.0%
+   Test complete.
+
+   Training and testing model...
+   Model selected: Extra Trees Classifier (1.00%).
+   Training and testing model complete.
+   Elapsed time: 15.283817291259766 seconds.
+
+   Checking model against unlabeled data...
+   Data to be evaluated:
+   Sample #1: [[1013.25, 0.1, 50.0, 1.0, 0.61, 23.0]] = Slightly Cool
+   Sample #2: [[1013.25, 0.1, 60.0, 1.0, 0.61, 26.0]] = Neutral
+   Sample #3: [[1013.25, 0.1, 76.0, 1.0, 0.61, 28.0]] = Slightly Warm
+   Prediction(s):
+   Sample #1: Prediction: Slightly Cool (expected Slightly Cool)
+   Sample #2: Prediction: Neutral (expected Neutral)
+   Sample #3: Prediction: Slightly Warm (expected Slightly Warm)
+
+   Collecting sensor data...
+   Sample #1 collected: [[1013.25, 0.1, 44.0, 1.0, 0.61, 22.0]]
+   Sample #2 collected: [[1013.25, 0.1, 44.0, 1.0, 0.61, 22.0]]
+   Sample #3 collected: [[1013.25, 0.1, 44.0, 1.0, 0.61, 22.0]]
+   Collection complete.
+
+   Processing sensor data...
+   Sensor data #1: Prediction: Slightly Cool
+   Sensor data #2: Prediction: Slightly Cool
+   Sensor data #3: Prediction: Slightly Cool
+   Overall sensation: 2 (Slightly Cool)
+
+   Shutting down board...
+   Job complete. Have an excellent day.
+   pi@dex:~ /SmartSensor $
+   ```
 
 ## Additional Information
 
@@ -222,6 +278,54 @@ Data verified using the [Thermal Comfort Tool](https://comfort.cbe.berkeley.edu/
   - Hot (6)
 
 ## Extra Credit
+
+Like we stated earlier, for extra credit, we will demonstrate how to collect and process data over-the-air (OTA) from satellite devices using the S3 and a remote Raspberry Pi Zero W with a Waveshare Sense HAT (B). The Sense HAT is much more accurate than our DHT-11 and also provides us with barometric pressure readings.
+
+> *If you are goint to use the Sense HAT (B), you need to install the BCM2835 library. For instructions, check out [https://www.waveshare.com/wiki/Sense_HAT_(B)](https://www.waveshare.com/wiki/Sense_HAT_(B))*
+
+1. Turn on both the Raspberry Pi 3 Model B+ and the Pi Zero W.
+
+> *Note - By the way, for this demo, you do not need the GrovePi HAT; you can remove all the GrovePi code. We just like the lights (and the board we printed out on our Ender 3. Thanks Chris Cirone at https://www.thingiverse.com/thing:2161971!)*
+
+2. Make and test the connection:
+
+   - Once they are started, make sure sock_test_server.py is on the S3 and sock_test_client.py on the Pi Zero.
+
+   - Get the IP address of each device (while there are many ways of doing this, we found the easiest way was to execute "hostname -I" at the command line)
+
+   - Open both scripts and replace the HOST value with the IP address of the device (leave PORT 333 the same, unless you are already using it).
+
+   - Test the connection by running sock_test_server.py on the S3 first, and then running sock_test_client.py on the Pi Zero (you may have to use sudo to run the scripts). You should get results similar to the following:
+
+     - S3:
+
+     ```linux
+     pi@dex:~ /SmartSensor $ sudo ./sock_test_server.py
+     Waiting for data...
+     Received 'Hello, friend.' from client!
+     Waiting for data...
+     Received 'Hello, friend.' from client!
+     Waiting for data...
+     Received 'Good-bye!' from client!
+     The client has signed off.
+     pi@dex:~ /SmartSensor $
+     ```
+
+     - Pi Zero W:
+
+     ```linux
+     pi@raspberrypi:~ /SmartSensor $ sudo ./sock_test_client.py
+     Sending data...
+     Received 'Hello back!' from server!
+     Sending data...
+     Received 'Hello back!' from server!
+     Sending data...
+     Received 'Good-bye!' from server!
+     Signing off: Good-bye.
+     pi@raspberrypi:~ /SmartSensor $
+     ```
+
+
 
 ## References
 
