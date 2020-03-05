@@ -25,6 +25,7 @@ __license__ = "MIT"
 HOST = "192.168.1.12"
 PORT = 333
 
+
 def main():
     """Application entry point."""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -35,7 +36,7 @@ def main():
             connection, client_address = s.accept()
             data = connection.recv(1024)
             if data:
-                data = repr(data.decode("ascii"))
+                data = repr(data.decode("utf-8"))
                 print("Received {} from client!".format(data))
                 if data == "'Good-bye!'":
                     data = b"Good-bye!"

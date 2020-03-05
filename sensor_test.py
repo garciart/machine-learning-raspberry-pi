@@ -59,7 +59,7 @@ def sensor_test():
                     print("Temperature: {}C | Humidity: {}%".format(t_str, h_str))
                     grove_rgb_lcd.setText_norefresh("T: {} C\nH: {} %".format(temp, humid))
                     sensor_data.append([temp, humid])
-                # For DHT22, wait three seconds before next reading
+                # For DHT11, wait three seconds before next reading
                 time.sleep(3)
         except (IOError, TypeError) as ex:
             print("Error: {}".format(str(ex)))
