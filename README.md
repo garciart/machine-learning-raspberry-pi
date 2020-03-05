@@ -281,7 +281,7 @@ Data verified using the [Thermal Comfort Tool](https://comfort.cbe.berkeley.edu/
 
 Like we stated earlier, for extra credit, we will demonstrate how to collect and process data over-the-air (OTA) from satellite devices using the S3 and a remote Raspberry Pi Zero W with a Waveshare Sense HAT (B). The Sense HAT is much more accurate than our DHT-11 and also provides us with barometric pressure readings.
 
-> *If you are goint to use the Sense HAT (B), you need to install the BCM2835 library. For instructions, check out [https://www.waveshare.com/wiki/Sense_HAT_(B)](https://www.waveshare.com/wiki/Sense_HAT_(B))*
+> *If you are going to use the Sense HAT (B), you need to install the BCM2835 library. For instructions, check out [https://www.waveshare.com/wiki/Sense_HAT_(B)](https://www.waveshare.com/wiki/Sense_HAT_(B))*
 
 1. Turn on both the Raspberry Pi 3 Model B+ and the Pi Zero W.
 
