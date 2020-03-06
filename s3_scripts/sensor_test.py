@@ -33,6 +33,7 @@ DHT_SENSOR_PORT = 7  # Digital port 7
 ON = 1
 OFF = 0
 
+
 def sensor_test():
     """Collects and displays temperature and humidity data"""
     sensor_data = []
@@ -57,7 +58,8 @@ def sensor_test():
                     t_str = str(temp)
                     h_str = str(humid)
                     print("Temperature: {}C | Humidity: {}%".format(t_str, h_str))
-                    grove_rgb_lcd.setText_norefresh("T: {} C\nH: {} %".format(temp, humid))
+                    grove_rgb_lcd.setText_norefresh(
+                        "T: {} C\nH: {} %".format(temp, humid))
                     sensor_data.append([temp, humid])
                 # For DHT11, wait three seconds before next reading
                 time.sleep(3)

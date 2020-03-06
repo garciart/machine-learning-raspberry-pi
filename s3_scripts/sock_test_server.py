@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-"""
-TCP Socket Server Test
+"""TCP Socket Server Test
 https://stackoverflow.com/questions/34548037/two-raspberries-communicating-each-other
 usage: sudo ./sock_test_server.py
 Python version used: 3.6.8

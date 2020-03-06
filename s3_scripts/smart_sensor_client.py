@@ -30,47 +30,47 @@ HOST = "192.168.1.12"
 PORT = 333
 
 # I2C address
-LPS22HB_I2C_ADDRESS   =  0x5C
+LPS22HB_I2C_ADDRESS = 0x5C
 
-LPS_ID                =  0xB1
+LPS_ID = 0xB1
 # Register
 # Interrupt register
-LPS_INT_CFG           =  0x0B
+LPS_INT_CFG = 0x0B
 # Pressure threshold registers
-LPS_THS_P_L           =  0x0C
-LPS_THS_P_H           =  0x0D
+LPS_THS_P_L = 0x0C
+LPS_THS_P_H = 0x0D
 # Who am I
-LPS_WHO_AM_I          =  0x0F
+LPS_WHO_AM_I = 0x0F
 # Control registers
-LPS_CTRL_REG1         =  0x10
-LPS_CTRL_REG2         =  0x11
-LPS_CTRL_REG3         =  0x12
+LPS_CTRL_REG1 = 0x10
+LPS_CTRL_REG2 = 0x11
+LPS_CTRL_REG3 = 0x12
 # FIFO configuration register
-LPS_FIFO_CTRL         =  0x14
+LPS_FIFO_CTRL = 0x14
 # Reference pressure registers
-LPS_REF_P_XL          =  0x15
-LPS_REF_P_L           =  0x16
-LPS_REF_P_H           =  0x17
+LPS_REF_P_XL = 0x15
+LPS_REF_P_L = 0x16
+LPS_REF_P_H = 0x17
 # Pressure offset registers
-LPS_RPDS_L            =  0x18
-LPS_RPDS_H            =  0x19
+LPS_RPDS_L = 0x18
+LPS_RPDS_H = 0x19
 # Resolution register
-LPS_RES_CONF          =  0x1A
+LPS_RES_CONF = 0x1A
 # Interrupt register
-LPS_INT_SOURCE        =  0x25
+LPS_INT_SOURCE = 0x25
 # FIFO status register
-LPS_FIFO_STATUS       =  0x26
+LPS_FIFO_STATUS = 0x26
 # Status register
-LPS_STATUS            =  0x27
+LPS_STATUS = 0x27
 # Pressure output registers
-LPS_PRESS_OUT_XL      =  0x28
-LPS_PRESS_OUT_L       =  0x29
-LPS_PRESS_OUT_H       =  0x2A
+LPS_PRESS_OUT_XL = 0x28
+LPS_PRESS_OUT_L = 0x29
+LPS_PRESS_OUT_H = 0x2A
 # Temperature output registers
-LPS_TEMP_OUT_L        =  0x2B
-LPS_TEMP_OUT_H        =  0x2C
+LPS_TEMP_OUT_L = 0x2B
+LPS_TEMP_OUT_H = 0x2C
 # Filter reset register
-LPS_RES               =  0x33
+LPS_RES = 0x33
 
 
 class SHTC3:
@@ -108,7 +108,7 @@ class SHTC3:
 class LPS22HB(object):
     """Class for SHTC3: Barometric Pressure and Temperature sensor."""
 
-    def __init__(self,address=LPS22HB_I2C_ADDRESS):
+    def __init__(self, address=LPS22HB_I2C_ADDRESS):
         """Constructor"""
         self._address = address
         self._bus = smbus.SMBus(1)
@@ -117,33 +117,33 @@ class LPS22HB(object):
         # Low-pass filter disabled, output registers not updated until
         # MSB and LSB have been read,
         # Enable Block Data Update, Set Output Data Rate to 0
-        self._write_byte(LPS_CTRL_REG1 ,0x02)
+        self._write_byte(LPS_CTRL_REG1, 0x02)
 
     def LPS22HB_RESET(self):
-        Buf=self._read_u16(LPS_CTRL_REG2)
-        Buf|=0x04
+        Buf = self._read_u16(LPS_CTRL_REG2)
+        Buf |= 0x04
         # SWRESET Set 1
-        self._write_byte(LPS_CTRL_REG2,Buf)
+        self._write_byte(LPS_CTRL_REG2, Buf)
         while Buf:
-            Buf=self._read_u16(LPS_CTRL_REG2)
-            Buf&=0x04
+            Buf = self._read_u16(LPS_CTRL_REG2)
+            Buf &= 0x04
 
     def LPS22HB_START_ONESHOT(self):
-        Buf=self._read_u16(LPS_CTRL_REG2)
+        Buf = self._read_u16(LPS_CTRL_REG2)
         # ONE_SHOT Set 1
-        Buf|=0x01
-        self._write_byte(LPS_CTRL_REG2,Buf)
+        Buf |= 0x01
+        self._write_byte(LPS_CTRL_REG2, Buf)
 
-    def _read_byte(self,cmd):
-        return self._bus.read_byte_data(self._address,cmd)
+    def _read_byte(self, cmd):
+        return self._bus.read_byte_data(self._address, cmd)
 
-    def _read_u16(self,cmd):
-        LSB = self._bus.read_byte_data(self._address,cmd)
-        MSB = self._bus.read_byte_data(self._address,cmd+1)
+    def _read_u16(self, cmd):
+        LSB = self._bus.read_byte_data(self._address, cmd)
+        MSB = self._bus.read_byte_data(self._address, cmd+1)
         return (MSB << 8) + LSB
 
-    def _write_byte(self,cmd,val):
-        self._bus.write_byte_data(self._address,cmd,val)
+    def _write_byte(self, cmd, val):
+        self._bus.write_byte_data(self._address, cmd, val)
 
 
 def collect_sensor_data():
@@ -164,11 +164,12 @@ def collect_sensor_data():
         while True:
             time.sleep(0.1)
             lps22hb.LPS22HB_START_ONESHOT()
-            if (lps22hb._read_byte(LPS_STATUS)&0x01) == 0x01:  # a new pressure data is generated
+            if (lps22hb._read_byte(LPS_STATUS) & 0x01) == 0x01:  # a new pressure data is generated
                 u8Buf[0] = lps22hb._read_byte(LPS_PRESS_OUT_XL)
                 u8Buf[1] = lps22hb._read_byte(LPS_PRESS_OUT_L)
                 u8Buf[2] = lps22hb._read_byte(LPS_PRESS_OUT_H)
-                pressure = ((u8Buf[2]<<16) + (u8Buf[1]<<8) + u8Buf[0]) / 4096.0
+                pressure = ((u8Buf[2] << 16) +
+                            (u8Buf[1] << 8) + u8Buf[0]) / 4096.0
                 temp = shtc3.SHTC3_Read_Temperature()
                 humid = shtc3.SHTC3_Read_Humidity()
                 break
@@ -187,9 +188,11 @@ def main():
     while True:
         # Collect three samples
         for y in range(3):
-            print("Collecting atmospheric pressure, temperature, and relative humidity...")
+            print(
+                "Collecting atmospheric pressure, temperature, and relative humidity...")
             pressure, temp, humid = collect_sensor_data()
-            sensor_data.append(([[round(pressure,2), 0.1, round(humid, 2), 1.0, 0.61, round(temp, 2)]]))
+            sensor_data.append(
+                ([[round(pressure, 2), 0.1, round(humid, 2), 1.0, 0.61, round(temp, 2)]]))
         for index, data in enumerate(sensor_data):
             print("Sample #{0} collected: {1}".format(index + 1, data))
         print("Sending data...")

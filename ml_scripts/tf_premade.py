@@ -15,7 +15,7 @@ Ref: https://www.tensorflow.org/tutorials/estimator/premade
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import math
+# import math
 import time
 
 import numpy as np
@@ -58,7 +58,7 @@ def input_fn(feature_dict, label_values=None, training=True, batch_size=256):
     return dataset.batch(batch_size)
 
 
-def tensorflow_classification_test(file_name, label_names, unlabeled_x):
+def tensorflow_classification_test(file_name, label_names):
     """Implementation of TensorFlow premade estimators:
     https://www.tensorflow.org/tutorials/estimator/premade
 
@@ -66,8 +66,6 @@ def tensorflow_classification_test(file_name, label_names, unlabeled_x):
     :type file_name: str
     :param label_names: The list of labels.
     :type label_names: list
-    :param unlabeled_x: Unlabeled data to be classified.
-    :type unlabeled_x: tuple
     :param expected_y: The expected results of classifying the unlabeled data.
     :type expected_y: list
     :return: Numpy array of predicted labels.
@@ -81,9 +79,9 @@ def tensorflow_classification_test(file_name, label_names, unlabeled_x):
     # Import and parse the dataset
     # Broken down for tutorial. Can be optimized into fewer lines.
     column_titles = []
-    feature_titles = []
+    # feature_titles = []
     label_title = ""
-    num_of_inputs = 0
+    # num_of_inputs = 0
     num_of_outputs = len(label_names)
     # feature_values = []
     # label_values = []
@@ -91,9 +89,9 @@ def tensorflow_classification_test(file_name, label_names, unlabeled_x):
     with open(file_name) as csv_file:
         dataframe = pd.read_csv(csv_file, header=0)
         column_titles = dataframe.columns.values
-        feature_titles = column_titles[:-1]
+        # feature_titles = column_titles[:-1]
         label_title = column_titles[-1]
-        num_of_inputs = len(feature_titles)
+        # num_of_inputs = len(feature_titles)
         # values = dataframe.values
         # feature_values = values[:, 0:num_of_inputs]
         # label_values = values[:, num_of_inputs]
@@ -128,12 +126,12 @@ def tensorflow_classification_test(file_name, label_names, unlabeled_x):
     # two-hidden-layer feedforward networks. IEEE Transactions on Neural Networks,
     # 14(2), 274–281. doi:10.1109/tnn.2003.809401
     # Thanks to Arvis Sulovari of the University of Washington Seattle
+    """
     hidden_layer_1 = int(round(math.sqrt(((num_of_outputs + 2) * num_of_inputs)) +
                                (2 * (math.sqrt(num_of_inputs / (num_of_outputs + 2))))))
     hidden_layer_2 = int(
         round(num_of_outputs * (math.sqrt(num_of_inputs / (num_of_outputs + 2)))))
 
-    """
     # A classifier for TensorFlow DNN models.
     classifier = tf.estimator.DNNClassifier(
         feature_columns=my_feature_columns,
@@ -195,7 +193,7 @@ def main():
     expected_y = ["Slightly Cool", "Neutral", "Slightly Warm"]
     """
     classifier = tensorflow_classification_test(
-        file_name, label_names, unlabeled_x)
+        file_name, label_names)
     # Generate predictions from the model
     predictions = classifier.predict(
         input_fn=lambda: input_fn(unlabeled_x))
