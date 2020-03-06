@@ -53,7 +53,9 @@ def main():
                 pmv_index = 6
 
             # print PMV value and classification
-            # print("Temp: {0:.2f}C | Humid: {1:.2f}% | PMV: {2:.2f} ({3})".format(temp, humid, results["pmv"], LABEL_NAMES[pmv_index]))
+            # print(
+            # "Temp: {0:.2f}C | Humid: {1:.2f}% | PMV: {2:.2f} ({3})".format(
+            # temp, humid, results["pmv"], LABEL_NAMES[pmv_index]))
 
             # print the entry for the CSV file
             print("1013.25,0.1,{0:.1f},1.0,0.61,{1:.1f},{2}".format(

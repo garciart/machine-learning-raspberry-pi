@@ -1,6 +1,6 @@
 # Smart Sensor
 
-![Smart Sensor Animation](smart_sensor.gif "Smart Sensor Animation")
+![Smart Sensor Animation](README/smart_sensor.gif "Smart Sensor Animation")
 
 > ***DISCLAIMER** - This repository and its contents are not endorsed by, sponsored by, affiliated with, nor associated with the National Aeronautics and Space Administration (NASA). This repository is only a demonstration of some of the concepts that I explored while I was an intern at NASA's Langley Research Center.*
 
@@ -99,7 +99,7 @@ While this task would be easy to accomplish with simple if-else-then program, we
      pi@dex:~ $ pip3 --version
      ```
 
-   - If they are not installed, follow the instructions at [https://www.raspberrypi.org/documentation/linux/software/python.md]( https://www.raspberrypi.org/documentation/linux/software/python.md).
+   - If they are not installed, follow the instructions at [https://www.raspberrypi.org/documentation/linux/software/python.md]( https://www.raspberrypi.org/documentation/linux/software/python.md). You may have to install Python 3.6 using the instructions found at [https://installvirtual.com/install-python-3-on-raspberry-pi-raspbian/](https://installvirtual.com/install-python-3-on-raspberry-pi-raspbian/).
 
 4. In the terminal, clone the Smart Sensor repository:
 
@@ -126,27 +126,29 @@ While this task would be easy to accomplish with simple if-else-then program, we
      - Green LED to digital port 5
      - Red LED to digital port 6
 
-   ![GrovePi Connections](smart_sensor_01.png "GrovePi Connections")
+   ![GrovePi Connections](README/smart_sensor_01.png "GrovePi Connections")
 
    - Once they are connected, run the following command:
 
    ```linux
-   pi@dex:~ /SmartSensor $ ./sensors_test.py
+   pi@dex:~ /SmartSensor $ cd s3_scripts
+   pi@dex:~ /SmartSensor/s3_scripts $ ./sensors_test.py
    ```
 
    - We should see results similar to the following, but with different values for temperature and humidity:
 
    ```linux
-   pi@dex:~ /SmartSensor $ Temperature: 20.5C | Humidity: 30%
+   pi@dex:~ /SmartSensor/s3_scripts $ Temperature: 20.5C | Humidity: 30%
    ```
 
 7. Once the sensor test is complete, verify scikit-learn, TensorFlow, and the sensors work (disregard any TensorFlow warnings for now). We recommend examining the code as it runs:
 
    ```linux
-   pi@dex:~ /SmartSensor $ ./sensors_test.py
-   pi@dex:~ /SmartSensor $ ./tf_premade.py
-   pi@dex:~ /SmartSensor $ ./sl_example.py
-   pi@dex:~ /SmartSensor $ ./tf_example.py
+   pi@dex:~ /SmartSensor/s3_scripts $ cd ..
+   pi@dex:~ /SmartSensor $ cd ml_scripts
+   pi@dex:~ /SmartSensor/ml_scripts $ ./tf_premade.py
+   pi@dex:~ /SmartSensor/ml_scripts $ ./sl_example.py
+   pi@dex:~ /SmartSensor/ml_scripts $ ./tf_example.py
    ```
 
 8. Notice that the scikit-learn example (sl_example.py) ran faster (4.6 sec vs 14.4 and 13.5 sec) and was much more accurate than the TensorFlow scripts (tf_premade.py and tf_example.py). We believe this is due to the dataset having six features, but with variations in only two of those features. If you run the scripts against the Iris dataset (remove the comments surrounding the Iris test and place them around the Thermal Comfort test), the accuracy of the TensorFlow scripts increases dramatically. However, for the S3, we will use the scikit classifiers.
@@ -192,7 +194,7 @@ While this task would be easy to accomplish with simple if-else-then program, we
 
 9. Finally, we'll put everything together in smart_sensor.py:
 
-   ![Smart Sensor Animation](smart_sensor.gif "Smart Sensor Animation")
+   ![Smart Sensor Animation](README/smart_sensor.gif "Smart Sensor Animation")
 
    - Test the Sensors (Optional) - First, we will make sure all the sensors and actuators work. In our case, the sensor is the DHT-11, and the actuators are the two LEDs and the RGB LCD. For production, you may remove this code if you like.
 
@@ -209,7 +211,9 @@ While this task would be easy to accomplish with simple if-else-then program, we
    - Here are the results of a sample run:
 
    ```linux
-   pi@dex:~ /SmartSensor $ ./smart_sensor.py
+   pi@dex:~ /SmartSensor/ml_scripts $ cd ..
+   pi@dex:~ /SmartSensor $ cd s3_scripts
+   pi@dex:~ /SmartSensor/s3_scripts $ ./smart_sensor.py
    Smart Sensor Application.
 
    Testing sensors...
@@ -247,7 +251,7 @@ While this task would be easy to accomplish with simple if-else-then program, we
 
    Shutting down board...
    Job complete. Have an excellent day.
-   pi@dex:~ /SmartSensor $
+   pi@dex:~ /SmartSensor/s3_scripts $
    ```
 
 ## Additional Information
@@ -300,7 +304,7 @@ Like we stated earlier, for extra credit, we will demonstrate how to collect and
      - S3:
 
      ```linux
-     pi@dex:~ /SmartSensor $ sudo ./sock_test_server.py
+     pi@dex:~ /SmartSensor/s3_scripts $ sudo ./sock_test_server.py
      Waiting for data...
      Received 'Hello, friend.' from client!
      Waiting for data...
@@ -308,7 +312,7 @@ Like we stated earlier, for extra credit, we will demonstrate how to collect and
      Waiting for data...
      Received 'Good-bye!' from client!
      The client has signed off.
-     pi@dex:~ /SmartSensor $
+     pi@dex:~ /SmartSensor/s3_scripts $
      ```
 
      - Pi Zero W:

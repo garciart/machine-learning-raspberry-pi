@@ -95,16 +95,16 @@ def scikit_learn_classification_test(file_name, label_names, *unlabeled_x):
     estimators.append(
         ("k-Nearest Neighbors Classifier (k-NN)", KNeighborsClassifier()))
     estimators.append(("Support Vector Classification (SVC)",
-                   SVC(kernel="linear", C=1.0)))
+                       SVC(kernel="linear", C=1.0)))
     estimators.append(("Gaussian Naive Bayes (GaussianNB)", GaussianNB()))
     estimators.append(("Random Forest Classifier", RandomForestClassifier()))
     estimators.append(("Extra Trees Classifier", ExtraTreesClassifier()))
     estimators.append(("Decision Tree Classifier", DecisionTreeClassifier()))
     estimators.append(("AdaBoost Classifier", AdaBoostClassifier()))
     estimators.append(("Gradient Boosting Classifier",
-                   GradientBoostingClassifier()))
+                       GradientBoostingClassifier()))
     estimators.append(("Linear Discriminant Analysis (LDA)",
-                   LinearDiscriminantAnalysis()))
+                       LinearDiscriminantAnalysis()))
 
     # Evaluate the accuracy of each estimator
     results = []
@@ -120,9 +120,9 @@ def scikit_learn_classification_test(file_name, label_names, *unlabeled_x):
 
     for name, classifier, score in results:
         print("{0:.2f}%: {1}".format(score, name))
-        
+
     print()
-    
+
     print("Data to be evaluated:")
     for i, (data, expected_label) in enumerate(unlabeled_x, start=1):
         print("Sample #{}: {} = {}".format(i, data, expected_label))
@@ -148,9 +148,11 @@ def main():
     label_names = ["Cold", "Cool", "Slightly Cool",
                    "Neutral", "Slightly Warm", "Warm", "Hot"]
     unlabeled_x = []
-    unlabeled_x.append(([[1013.25, 0.1, 50.0, 1.0, 0.61, 23.0]], "Slightly Cool"))
+    unlabeled_x.append(
+        ([[1013.25, 0.1, 50.0, 1.0, 0.61, 23.0]], "Slightly Cool"))
     unlabeled_x.append(([[1013.25, 0.1, 60.0, 1.0, 0.61, 26.0]], "Neutral"))
-    unlabeled_x.append(([[1013.25, 0.1, 76.0, 1.0, 0.61, 28.0]], "Slightly Warm"))
+    unlabeled_x.append(
+        ([[1013.25, 0.1, 76.0, 1.0, 0.61, 28.0]], "Slightly Warm"))
     # expected_y = ["Slightly Cool", "Neutral", "Slightly Warm"]
     print()
     scikit_learn_classification_test(file_name, label_names, *unlabeled_x)

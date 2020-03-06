@@ -48,6 +48,7 @@ DHT_SENSOR_PORT = 7  # Digital port 7
 ON = 1
 OFF = 0
 
+
 def sensors_test():
     """Test the GrovePi DHT sensor, LEDs and RGB LCD screen."""
     try:
@@ -70,7 +71,8 @@ def sensors_test():
                 t_str = str(temp)
                 h_str = str(humid)
                 print("Temperature: {}C | Humidity: {}%".format(t_str, h_str))
-                grove_rgb_lcd.setText_norefresh("Tmp: {} C\nHmd: {} %".format(t_str, h_str))
+                grove_rgb_lcd.setText_norefresh(
+                    "Tmp: {} C\nHmd: {} %".format(t_str, h_str))
             # For DHT22, wait three seconds before next reading
             time.sleep(3)
             grove_rgb_lcd.setRGB(0, 0, 0)
@@ -187,9 +189,11 @@ def check_model(label_names, selected_model):
     """
     print("Data to be evaluated:")
     unlabeled_x = []
-    unlabeled_x.append(([[1013.25, 0.1, 50.0, 1.0, 0.61, 23.0]], "Slightly Cool"))
+    unlabeled_x.append(
+        ([[1013.25, 0.1, 50.0, 1.0, 0.61, 23.0]], "Slightly Cool"))
     unlabeled_x.append(([[1013.25, 0.1, 60.0, 1.0, 0.61, 26.0]], "Neutral"))
-    unlabeled_x.append(([[1013.25, 0.1, 76.0, 1.0, 0.61, 28.0]], "Slightly Warm"))
+    unlabeled_x.append(
+        ([[1013.25, 0.1, 76.0, 1.0, 0.61, 28.0]], "Slightly Warm"))
     # expected_y = ["Slightly Cool", "Neutral", "Slightly Warm"]
 
     for i, (data, expected_label) in enumerate(unlabeled_x, start=1):
@@ -216,7 +220,8 @@ def collect_sensor_data():
                 t_str = str(temp)
                 h_str = str(humid)
                 grove_rgb_lcd.setRGB(127, 127, 127)
-                grove_rgb_lcd.setText_norefresh("Tmp: {} C\nHmd: {} %".format(t_str, h_str))
+                grove_rgb_lcd.setText_norefresh(
+                    "Tmp: {} C\nHmd: {} %".format(t_str, h_str))
                 sensor_data.append(([[1013.25, 0.1, humid, 1.0, 0.61, temp]]))
             # For DHT11, wait three seconds before next reading
             time.sleep(3)
@@ -247,11 +252,13 @@ def process_sensor_data(label_names, selected_model, sensor_data):
         sensation = 0
         for j, data in enumerate(sensor_data, start=1):
             print("Sensor data #{}: Prediction: {}".format(
-            j, label_names[int(selected_model[1].predict(data))]))
+                j, label_names[int(selected_model[1].predict(data))]))
             sensation += int(selected_model[1].predict(data))
         sensation = int(sensation / len(sensor_data))
-        print("Overall sensation: {} ({})".format(sensation, label_names[sensation]))
-        grove_rgb_lcd.setText_norefresh("Sensation:\n{} ({})".format(sensation, label_names[sensation]))
+        print("Overall sensation: {} ({})".format(
+            sensation, label_names[sensation]))
+        grove_rgb_lcd.setText_norefresh(
+            "Sensation:\n{} ({})".format(sensation, label_names[sensation]))
         if sensation == 3:
             # Temperature is good: Everything is green.
             grove_rgb_lcd.setRGB(0, 255, 0)
@@ -299,7 +306,8 @@ def main():
 
     print("Training and testing model...")
     selected_model = prepare_model(file_name, label_names)
-    print("Model selected: {0} ({1:.2f}%).".format(selected_model[0], selected_model[2]))
+    print("Model selected: {0} ({1:.2f}%).".format(
+        selected_model[0], selected_model[2]))
     print("Training and testing model complete.")
     print("Elapsed time: {} seconds.\n".format((time.time() - start_time)))
 

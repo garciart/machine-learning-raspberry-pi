@@ -81,7 +81,8 @@ def tensorflow_classification_test(file_name, label_names, unlabeled_x):
     y_values = encoder.fit_transform(y_raw)
 
     # Split the data into training and test sets using a 80:20 ratio.
-    train_x, test_x, train_y, test_y = train_test_split(x_values, y_values, test_size=0.20)
+    train_x, test_x, train_y, test_y = train_test_split(
+        x_values, y_values, test_size=0.20)
 
     # Build the model
     model = Sequential()

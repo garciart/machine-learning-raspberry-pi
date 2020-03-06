@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-"""
-TCP Socket Client Test
+"""TCP Socket Client Test
 https://stackoverflow.com/questions/34548037/two-raspberries-communicating-each-other
 usage: sudo ./sock_test_client.py
 Python version used: 3.6.8
