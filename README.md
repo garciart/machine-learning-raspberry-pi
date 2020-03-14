@@ -15,7 +15,7 @@
 
 ## Introduction
 
-While I was an intern at NASA, I noticed a lot of interest in "smart" technologies, e.g., "Edge" computing and Internet of Things (IoT) devices; Augmented and virtual reality; Machine learning; etc.
+While I was an intern at NASA, I noticed a lot of interest in "smart" technologies, e.g., "Edge" computing and Internet of Things (IoT) devices; augmented and virtual reality; machine learning; etc.
 
 Since there's no MicroCenter or Home Depot in space (and space delivery is not included in Amazon Prime), one of the things I thought about was a portable, customizable, plug-and-play data analyzer, aka a smart sensor suite (S3). For less than $100, the S3, with a set of basic sensors, could replace the following devices:
 
@@ -27,9 +27,9 @@ Since there's no MicroCenter or Home Depot in space (and space delivery is not i
 
 In addition, users could add or create ad hoc sensors and actuators from simple components using wires, resistors, breadboards, etc. As a bonus, the S3 could communicate over Bluetooth, RF, and WiFi wireless networks.
 
-This device would also use machine learning, as well as rule-based, conditional logic, to analyze data on the "edge" and act on the results of its analyses through actuators. This system would complement or replace rule-based, conditional logic systems, such as engine control units (i.e., ECU's, which use lookup tables), electronic flight control systems (i.e., EFCS's, which use flight control laws), heating, ventilation, and air conditioning (HVAC) control systems (which use target states), etc.
+This device would also use machine learning, as well as rule-based, conditional logic, to analyze data on the "edge" and act on the results through actuators. This system would complement or replace rule-based, conditional logic systems, such as engine control units (i.e., ECU's, which use lookup tables), electronic flight control systems (i.e., EFCS's, which use flight control laws), heating, ventilation, and air conditioning (HVAC) control systems (which use target states), etc.
 
-In this demo, we will create a device that collects environmental data to determine if the thermal comfort level of a room complies with the American Society of Heating, Refrigerating and Air-Conditioning Engineers (ASHRAE) Standard 55-2017. This standard helps engineers design effective HVAC systems.
+In this demo, we will create a device that collects and analyzes environmental data to determine if the thermal comfort level of a room complies with the American Society of Heating, Refrigerating and Air-Conditioning Engineers (ASHRAE) Standard 55-2017. This standard helps engineers design effective HVAC systems.
 
 As a bonus, we will demonstrate how to collect and process data over-the-air (OTA) from satellite devices using the S3.
 
