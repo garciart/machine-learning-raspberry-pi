@@ -114,7 +114,7 @@ While this task would be easy to accomplish with simple if-else-then program, we
 5. Install the required dependencies using the below command. While we tried to ensure the requirements file is correct, if you run into an issue, install the problem package separately, and then re-run the requirements.txt file:
 
    ```linux
-   pi@dex:~/SmartSensor $ pip3 install --no-cache-dir -r requirements.txt
+   pi@dex:~/SmartSensor $ pip3 install --no-cache-dir -r --upgrade requirements.txt
    ```
 
 6. Our next step is to test the sensors:
