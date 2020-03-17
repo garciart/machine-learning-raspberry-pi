@@ -1,5 +1,5 @@
 # Usage: pip3 install --no-cache-dir -r requirements.txt
-numpy<2.0,>=1.14.5
+numpy
 scipy
 joblib
 six
