@@ -13,7 +13,7 @@ Styling guide: PEP 8 -- Style Guide for Python Code
 
 from __future__ import (absolute_import, division,
                         print_function, unicode_literals)
-
+import ast
 import math
 import time
 import socket
@@ -177,7 +177,6 @@ def check_model(label_names, selected_model):
 def get_data(s, command_for_client):
     data = ""
     while True:
-        print("Waiting for data...")
         s.listen(1)
         connection, client_address = s.accept()
         data = connection.recv(1024)
@@ -201,6 +200,7 @@ def process_sensor_data(label_names, selected_model, sensor_data):
     :type sensor_data: list of tuples
     """
     try:
+        sensor_data = ast.literal_eval(sensor_data)
         sensation = 0
         for j, data in enumerate(sensor_data, start=1):
             print("Sensor data #{}: Prediction: {}".format(
@@ -265,8 +265,8 @@ def main():
     sensor_data = []
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((HOST, PORT))
-        for i in range(2):
-            print("Collecting sensor data...")
+        for i in range(3):
+            print("Waiting for sensor data...")
             sensor_data = get_data(s, "30")
             print("Received {} from client!".format(sensor_data))
             print("Collection complete.\n")

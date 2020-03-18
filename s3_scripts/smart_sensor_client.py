@@ -190,7 +190,7 @@ def main():
         for y in range(3):
             print(
                 "Collecting atmospheric pressure, temperature, and relative humidity...")
-            pressure, temp, humid = collect_sensor_data()
+            pressure, humid, temp = collect_sensor_data()
             sensor_data.append(
                 ([[round(pressure, 2), 0.1, round(humid, 2), 1.0, 0.61, round(temp, 2)]]))
         for index, data in enumerate(sensor_data):
