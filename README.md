@@ -90,41 +90,59 @@ While this task would be easy to accomplish with simple if-else-then program, we
 
    - If you prefer to SSH, follow these instructions instead: [https://www.dexterindustries.com/GrovePi/get-started-with-the-grovepi/setting-software/](https://www.dexterindustries.com/GrovePi/get-started-with-the-grovepi/setting-software/).
 
-3. Ensure that Python 3 and PIP are installed:
+3. Increase the Raspberry Pi's swap file size to 1024 MB:
 
-   - Run the following commands to verify Python 3 and PIP are installed:
+   - Input the following to stop the swapfile manager:
 
      ```linux
-     pi@dex:~ $ python3 --version
-     pi@dex:~ $ pip3 --version
+     sudo /etc/init.d/dphys-swapfile stop
      ```
 
-   - If they are not installed, follow the instructions at [https://www.raspberrypi.org/documentation/linux/software/python.md]( https://www.raspberrypi.org/documentation/linux/software/python.md). You may have to install Python 3.6 using the instructions found at [https://installvirtual.com/install-python-3-on-raspberry-pi-raspbian/](https://installvirtual.com/install-python-3-on-raspberry-pi-raspbian/).
+   - Input the following to open the swap file configuration:
 
-4. In the terminal, clone the Smart Sensor repository:
+     ```linux
+     sudo nano /etc/dphys-swapfile
+     ```
+
+   - Change CONF_SWAPSIZE=100 to CONF_SWAPSIZE=1024 and save (<kbd>CTRL</kbd><kbd>O</kbd>, then <kbd>CTRL</kbd><kbd>X</kbd>). Input the following to restart the swapfile manager:
+
+     ```linux
+     sudo /etc/init.d/dphys-swapfile start
+     ```
+
+   - Reboot your Raspberry Pi.
+
+4. Using the terminal, clone the Smart Sensor repository. By the way, since some of the scripts require elevated privileges (e.g., writing to a file, using the communications server, etc.), you will have to install all modules and packages using sudo or you will get a "Permission Denied" error:
 
    ```linux
-   pi@dex:~ $ sudo git clone https://github.com/garciart/SmartSensor
+   pi@dex:~ $ sudo git clone https://github.com/garciart/SmartSensor # Clone the repository
+   pi@dex:~ $ sudo chown -R pi:pi SmartSensor # If logged in as pi, assume ownership of all files in case you have to edit a script
    pi@dex:~ $ cd SmartSensor
-   pi@dex:~/SmartSensor $ sudo chmod +x permissions.sh
-   pi@dex:~/SmartSensor $ sudo ./permissions.sh
-   pi@dex:~/SmartSensor $ sudo python3 setup.py install
+   pi@dex:~ $ sudo chmod +x permissions.sh
+   pi@dex:~ $ sudo ./permissions.sh # Make the scripts executable
    ```
 
-5. Install the required dependencies using the below command. While we tried to ensure the requirements file is correct, if you run into an issue, install the problem package separately, and then re-run the requirements.txt file:
+5. Install the required dependencies:
 
-   ```linux
-   pi@dex:~/SmartSensor $ sudo pip3 install --no-cache-dir --upgrade -r requirements.txt
-   ```
+   - Instead of a requirements.txt file, we created a shell script to install or update the dependencies:
+
+     ```linux
+     pi@dex:~/SmartSensor $ sudo chmod +x setup.sh
+     pi@dex:~/SmartSensor $ sudo ./setup.sh
+     ```
+
+   - Feel free to view the ```setup.sh``` script to get more information about the dependencies. To run the scripts, you will need to use Python 3. If you are using Python 3.5, that's ok. These scripts will run on Python 3.5 and higher. Also note that we use the newer Advanced Packaging Tool (APT) instead of apt-get.
+
+   - While we tried to ensure the shell script is correct, if you run into an issue, install the problem package separately, and then re-run ```setup.sh```. If you have more problems, feel free to contact us at rgarcia@rgprogramming.com.
 
 6. Our next step is to test the sensors:
 
    - Connect them as follows:
 
-     - DHT (11 or 22) to digital port 7
-     - RGB LCD to I2C port 2
-     - Green LED to digital port 5
-     - Red LED to digital port 6
+     - DHT (11 or 22) to digital port 7 on the Grove Pi HAT
+     - RGB LCD to I2C port 2 on the Grove Pi HAT
+     - Green LED to digital port 5 on the Grove Pi HAT
+     - Red LED to digital port 6 on the Grove Pi HAT
 
    ![GrovePi Connections](README/smart_sensor_01.png "GrovePi Connections")
 
@@ -196,17 +214,17 @@ While this task would be easy to accomplish with simple if-else-then program, we
 
    ![Smart Sensor Animation](README/smart_sensor.gif "Smart Sensor Animation")
 
-   - Test the Sensors (Optional) - First, we will make sure all the sensors and actuators work. In our case, the sensor is the DHT-11, and the actuators are the two LEDs and the RGB LCD. For production, you may remove this code if you like.
+   - **Test the Sensors (Optional)** - First, we will make sure all the sensors and actuators work. In our case, the sensor is the DHT-11, and the actuators are the two LEDs, and the RGB LCD (which started crapping out on us). For production, you may remove this code if you like.
 
-   - Prepare the Model: Next, we will train all the classifiers as we did in sl_example.py. We will then pick the most accurate classifier for our model and retrain it against the whole data set. You will not get the same classifier all the time; during our test runs, we used the Extra Trees, the Gradient Boosting, and the Random Forest classifiers.
+   - **Prepare the Model:** Next, we will train all the classifiers as we did in sl_example.py. We will then pick the most accurate classifier for our model and retrain it against the whole data set. You will not get the same classifier all the time; during our test runs, we used the Extra Trees, the Gradient Boosting, and the Random Forest classifiers.
 
-   - Check the Model (Optional): This is another optional step; We will check the accuracy of the selected model against some sample data. By the way, even though the data is unlabeled, we know what the resulting predictions should be. Once again, for production, you may remove this code if you like.
+   - **Check the Model (Optional):** This is another optional step; We will check the accuracy of the selected model against some sample data. By the way, even though the data is unlabeled, we know what the resulting predictions should be. Once again, for production, you may remove this code if you like.
 
-   - Collect Sensor Data: This is GrovePi specific code. We collect three samples of temperature and humidity from the DHT sensor, reformat it into a list of tuples, and send it for processing.
+   - **Collect Sensor Data:** This is GrovePi specific code. We collect three samples of temperature and humidity from the DHT sensor, reformat it into a list of tuples, and send it for processing.
 
-   - Process Sensor Data: Here, we run the collected data against the selected model. We collect the results, average them together, and make a determination of the conditions in the room based on the ASHRAE 7-point scale for thermal comfort.
+   - **Process Sensor Data:** Here, we run the collected data against the selected model. We collect the results, average them together, and make a determination of the conditions in the room based on the ASHRAE 7-point scale for thermal comfort.
 
-   - Finally, we shutdown the sensors and actuators to extend their working life.
+   - **Shutdown:** Finally, we shutdown the sensors and actuators to extend their working life.
 
    - Here are the results of a sample run:
 
@@ -258,7 +276,7 @@ While this task would be easy to accomplish with simple if-else-then program, we
 
 ### Data Source
 
-Data verified using the [Thermal Comfort Tool](https://comfort.cbe.berkeley.edu/), Center for the Built Environment, University of California Berkeley.
+Data verified using the [Thermal Comfort Tool](https://comfort.cbe.berkeley.edu/) from the Center for the Built Environment (CBE at the University of California, Berkeley.
 
 ### Features
 
@@ -285,11 +303,12 @@ Data verified using the [Thermal Comfort Tool](https://comfort.cbe.berkeley.edu/
 
 Like we stated earlier, for extra credit, we will demonstrate how to collect and process data over-the-air (OTA) from satellite devices using the S3 and a remote Raspberry Pi Zero W with a Waveshare Sense HAT (B). The Sense HAT is much more accurate than our DHT-11 and also provides us with barometric pressure readings.
 
+> *You do not have to use our setup. You can use different combinations of devices, such as an ESP32, an ESP8226, a DHT-22, an M5StickC with an M5Stack sensor, etc.*
 > *If you are going to use the Sense HAT (B), you need to install the BCM2835 library. For instructions, check out [https://www.waveshare.com/wiki/Sense_HAT_(B)](https://www.waveshare.com/wiki/Sense_HAT_(B))*
 
 1. Turn on both the Raspberry Pi 3 Model B+ and the Pi Zero W.
 
-> *Note - By the way, for this demo, you do not need the GrovePi HAT; you can remove all the GrovePi code. We just like the lights (and the board we printed out on our Ender 3. Thanks Chris Cirone at https://www.thingiverse.com/thing:2161971!)*
+   > *Note - By the way, for this demo, you do not need the GrovePi HAT or the GrovePi code. We just like the lights (and the board we printed out on our Ender 3. Thanks Chris Cirone at [https://www.thingiverse.com/thing:2161971](https://www.thingiverse.com/thing:2161971)!)*
 
 2. Make and test the connection:
 
@@ -329,15 +348,98 @@ Like we stated earlier, for extra credit, we will demonstrate how to collect and
      pi@raspberrypi:~ /SmartSensor $
      ```
 
+3. Get some data and process it using scikit-learn. Remember, it selects the best model after training, so your results may not be the same as ours:
 
+     - S3:
+
+     ```linux
+     pi@dex:~ /SmartSensor/s3_scripts $ sudo ./smart_sensor_server.py
+     Starting Smart Sensor Server...
+
+     Training and testing model...
+     Model selected: Random Forest Classifier (1.00%).
+     Training and testing model complete.
+     Elapsed time: 16.272276639938354 seconds.
+
+     Checking model against unlabeled data...
+     Data to be evaluated:
+     Sample #1: [[1013.25, 0.1, 50.0, 1.0, 0.61, 23.0]] = Slightly Cool
+     Sample #2: [[1013.25, 0.1, 60.0, 1.0, 0.61, 26.0]] = Neutral
+     Sample #3: [[1013.25, 0.1, 76.0, 1.0, 0.61, 28.0]] = Slightly Warm
+     Prediction(s):
+     Sample #1: Prediction: Slightly Cool (expected Slightly Cool)
+     Sample #2: Prediction: Neutral (expected Neutral)
+     Sample #3: Prediction: Slightly Warm (expected Slightly Warm)
+
+     Waiting for sensor data...
+     Received [[[1031.76, 0.1, 36.83, 1.0, 0.61, 24.65]], [[1031.53, 0.1, 36.81, 1.0, 0.61, 24.65]], [[1031.57, 0.1, 36.83, 1.0, 0.61, 24.66]]] from client!
+     Collection complete.
+
+     Processing sensor data...
+     Sensor data #1: Prediction: Neutral
+     Sensor data #2: Prediction: Neutral
+     Sensor data #3: Prediction: Neutral
+     Overall sensation: 3 (Neutral)
+
+     Waiting for sensor data...
+     Received [[[1031.53, 0.1, 36.59, 1.0, 0.61, 24.68]], [[1031.55, 0.1, 36.59, 1.0, 0.61, 24.71]], [[1031.54, 0.1, 36.58, 1.0, 0.61, 24.68]]] from client!
+     Collection complete.
+
+     Processing sensor data...
+     Sensor data #1: Prediction: Neutral
+     Sensor data #2: Prediction: Neutral
+     Sensor data #3: Prediction: Neutral
+     Overall sensation: 3 (Neutral)
+
+     Waiting for sensor data...
+     Received [[[1031.57, 0.1, 36.73, 1.0, 0.61, 24.79]], [[1031.52, 0.1, 36.73, 1.0, 0.61, 24.76]], [[1031.51, 0.1, 36.72, 1.0, 0.61, 24.79]]] from client!
+     Collection complete.
+
+     Processing sensor data...
+     Sensor data #1: Prediction: Neutral
+     Sensor data #2: Prediction: Neutral
+     Sensor data #3: Prediction: Neutral
+     Overall sensation: 3 (Neutral)
+
+     Shutting down board...
+     Job complete. Have an excellent day.
+     pi@dex:~/SmartSensor/s3_scripts $
+     ```
+
+     - Pi Zero W:
+
+     ```linux
+     pi@raspberrypi:~ /SmartSensor $ sudo ./smart_sensor_client.py
+     Starting Smart Sensor Client...
+     Collecting atmospheric pressure, temperature, and relative humidity...
+     Sample #1 collected: [[1031.76, 0.1, 36.83, 1.0, 0.61, 24.65]]
+     Sample #2 collected: [[1031.53, 0.1, 36.81, 1.0, 0.61, 24.65]]
+     Sample #3 collected: [[1031.57, 0.1, 36.83, 1.0, 0.61, 24.66]]]
+     Sending data...
+     Received command for 30 second delay from server.
+     Collecting atmospheric pressure, temperature, and relative humidity...
+     Sample #1 collected: [[1031.53, 0.1, 36.59, 1.0, 0.61, 24.68]]
+     Sample #2 collected: [[1031.55, 0.1, 36.59, 1.0, 0.61, 24.71]]
+     Sample #3 collected: [[1031.54, 0.1, 36.58, 1.0, 0.61, 24.68]]
+     Sending data...
+     Received command for 30 second delay from server.
+     Collecting atmospheric pressure, temperature, and relative humidity...
+     Sample #1 collected: [[1031.57, 0.1, 36.73, 1.0, 0.61, 24.79]]
+     Sample #2 collected: [[1031.52, 0.1, 36.73, 1.0, 0.61, 24.76]]
+     Sample #3 collected: [[1031.51, 0.1, 36.72, 1.0, 0.61, 24.79]]
+     Sending data...
+     Shutting down client. Good-bye.
+     pi@raspberrypi:~ /SmartSensor $
+
+And that's it! Remember, you do not have to use our setup to create a socket server and client. Good luck!
 
 ## References
 
-ASHRAE. (2017). ANSI/ASHRAE standard 55-2017; Thermal environmental conditions for human occupancy (55). Atlanta, GA: Author.
+- ASHRAE. (2017). ANSI/ASHRAE standard 55-2017; Thermal environmental conditions for human occupancy (55). Atlanta, GA: Author.
 
-Engineering ToolBox. (2004). Illuminance - recommended light level. Retrieved February 18, 2020, from [https://www.engineeringtoolbox.com/light-level-rooms-d_708.html](https://www.engineeringtoolbox.com/light-level-rooms-d_708.html)
+- Engineering ToolBox. (2004). Illuminance - recommended light level. Retrieved February 18, 2020, from [https://www.engineeringtoolbox.com/light-level-rooms-d_708.html](https://www.engineeringtoolbox.com/light-level-rooms-d_708.html)
 
-Guenther, S. (2019, November 7). What Is PMV? What Is PPD? The basics of thermal comfort. Retrieved from [https://www.simscale.com/blog/2019/09/what-is-pmv-ppd/](https://www.simscale.com/blog/2019/09/what-is-pmv-ppd/)
+- Guenther, S. (2019, November 7). What Is PMV? What Is PPD? The basics of thermal comfort. Retrieved from [https://www.simscale.com/blog/2019/09/what-is-pmv-ppd/](https://www.simscale.com/blog/2019/09/what-is-pmv-ppd/)
 
-Hoyt, T., Schiavon, S., Tartarini, F., Cheung, T., Steinfeld, K., Piccioli, A., & Moon, D. (2019). CBE Thermal Comfort Tool. Retrieved from [https://comfort.cbe.berkeley.edu/](https://comfort.cbe.berkeley.edu/)
+- Hoyt, T., Schiavon, S., Tartarini, F., Cheung, T., Steinfeld, K., Piccioli, A., & Moon, D. (2019). CBE Thermal Comfort Tool. Retrieved from [https://comfort.cbe.berkeley.edu/](https://comfort.cbe.berkeley.edu/)
 Center for the Built Environment, University of California Berkeley

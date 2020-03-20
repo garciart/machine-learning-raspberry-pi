@@ -3,6 +3,7 @@
 /build
 /__pycache__
 /extra
+/.vscode
 dataset.xlsx
 install.log
 notes.txt
