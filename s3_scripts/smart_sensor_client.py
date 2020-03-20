@@ -204,13 +204,14 @@ def main():
             # Get a response
             response = s.recv(1024)
             response = response.decode("utf-8")
-            print("Received command for {} second delay from server.".format(response))
             if response == "terminate":
                 break
+            else:
+                print("Received command for {} second delay from server.".format(response))
             sensor_data = []
             # Delay to allow serer to process data
             time.sleep(int(response))
-    print("Shutting down client. Good-bye.")
+    print("Shutting down client. Have an excellent day.")
 
 
 if __name__ == "__main__":

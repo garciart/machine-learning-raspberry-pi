@@ -11,17 +11,20 @@ Styling guide: PEP 8 -- Style Guide for Python Code
     (https://www.python.org/dev/peps/pep-0257/)
 """
 
-from __future__ import (absolute_import, division,
-                        print_function, unicode_literals)
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
 import ast
 import math
-import time
 import socket
+import time
+
 import numpy as np
 import pandas as pd
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.ensemble import (AdaBoostClassifier, ExtraTreesClassifier,
-                              GradientBoostingClassifier, RandomForestClassifier)
+                              GradientBoostingClassifier,
+                              RandomForestClassifier)
 from sklearn.linear_model import LogisticRegression, SGDClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
@@ -30,8 +33,8 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC, LinearSVC
 from sklearn.tree import DecisionTreeClassifier
 
-import grovepi
 import grove_rgb_lcd
+import grovepi
 
 # Module metadata dunders
 __author__ = "Rob Garcia"
@@ -270,7 +273,6 @@ def main():
             sensor_data = get_data(s, "30")
             print("Received {} from client!".format(sensor_data))
             print("Collection complete.\n")
-
             print("Processing sensor data...")
             process_sensor_data(label_names, selected_model, sensor_data)
             print()

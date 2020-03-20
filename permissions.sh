@@ -1,6 +1,6 @@
 # Modify permissions: make files executable
 # Usage: >> sudo ./permissions.sh
-chmod +x setup.py
+chmod +x setup.sh
 chmod +x ml_scripts/sl_example.py
 chmod +x ml_scripts/tf_example.py
 chmod +x ml_scripts/tf_premade.py
