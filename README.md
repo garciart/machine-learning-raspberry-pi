@@ -133,7 +133,7 @@ While this task would be easy to accomplish with simple if-else-then program, we
 
    - Feel free to view the ```setup.sh``` script to get more information about the dependencies. To run the scripts, you will need to use Python 3. If you are using Python 3.5, that's ok. These scripts will run on Python 3.5 and higher. Also note that we use the newer Advanced Packaging Tool (APT) instead of apt-get.
 
-   - While we tried to ensure the shell script is correct, if you run into an issue, install the problem package separately, and then re-run ```setup.sh```. If you have more problems, feel free to contact us at rgarcia@rgprogramming.com.
+   - While we tried to ensure the shell script is correct, if you run into an issue, install the problem package separately, and then re-run ```setup.sh```. If you have more problems, feel free to contact us at [rgarcia@rgcoding.com](mailto:rgarcia@rgcoding.com).
 
 6. Our next step is to test the sensors:
 
