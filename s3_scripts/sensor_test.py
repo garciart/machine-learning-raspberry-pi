@@ -22,7 +22,7 @@ import grove_rgb_lcd
 # Module metadata dunders
 __author__ = "Rob Garcia"
 __copyright__ = "Copyright 2019-2020, Rob Garcia"
-__email__ = "rgarcia@rgprogramming.com"
+__email__ = "rgarcia@rgcoding.com"
 __license__ = "MIT"
 
 BLUE_DHT = 0         # For DHT11
@@ -35,12 +35,13 @@ OFF = 0
 
 
 def sensor_test():
+    # type: () -> None
     """Collects and displays temperature and humidity data"""
     sensor_data = []
 
-    for x in range(10):
+    for _ in range(10):
         try:
-            for y in range(3):
+            for _ in range(3):
                 [temp, humid] = grovepi.dht(DHT_SENSOR_PORT, BLUE_DHT)
                 if not math.isnan(temp) and not math.isnan(humid):
                     if temp >= 20.0:
@@ -76,6 +77,7 @@ def sensor_test():
 
 
 def shutdown_board():
+    # type: () -> None
     """Turns off LEDs and clears LCD screen"""
     grovepi.digitalWrite(RED_LED, OFF)
     grovepi.digitalWrite(GREEN_LED, OFF)

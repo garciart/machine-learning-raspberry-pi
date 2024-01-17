@@ -15,6 +15,8 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import ctypes
+from typing import Tuple, Union, Any
+
 import smbus
 import socket
 import time
@@ -22,7 +24,7 @@ import time
 # Module metadata dunders
 __author__ = "Rob Garcia"
 __copyright__ = "Copyright 2019-2020, Rob Garcia"
-__email__ = "rgarcia@rgprogramming.com"
+__email__ = "rgarcia@rgcoding.com"
 __license__ = "MIT"
 
 # Waveshare Sense HAT (B) information
@@ -85,8 +87,9 @@ class SHTC3:
         init(None)
 
     def SHTC3_Read_Temperature(self):
-        """Get the temperature reading in Celsius
-        :return: The temperature data collected.
+        """Get the temperature reading in Celsius.
+
+        :return: The temperature data collected
         :rtype: float
         """
         temperature = self.dll.SHTC3_Read_TH
@@ -95,8 +98,9 @@ class SHTC3:
         return temperature(None)
 
     def SHTC3_Read_Humidity(self):
-        """Get the relative humidity reading in percentage
-        :return: The humidity data collected.
+        """Get the relative humidity reading in percentage.
+
+        :return: The humidity data collected
         :rtype: float
         """
         humidity = self.dll.SHTC3_Read_RH
@@ -147,10 +151,12 @@ class LPS22HB(object):
 
 
 def collect_sensor_data():
+    # type: () -> tuple[Union[float, Any], float, float]
     """Collects temperature and humidity data
-    :return: The temperature and humidity data collected, formated with
-             atmospheric pressure, air speed, metabolic rate, and clothing level.
-    :rtype: list of tuples
+
+    :returns: The temperature and humidity data collected, formatted with
+       atmospheric pressure, air speed, metabolic rate, and clothing level
+    :rtype: list
     """
     # Instantiate the classes of the sensors
     lps22hb = LPS22HB()
@@ -159,7 +165,6 @@ def collect_sensor_data():
     humid = 0.0
     pressure = 0.0
     u8Buf = [0, 0, 0]
-    sensor_data = []
     try:
         while True:
             time.sleep(0.1)
@@ -187,7 +192,7 @@ def main():
     sensor_data = []
     while True:
         # Collect three samples
-        for y in range(3):
+        for _ in range(3):
             print(
                 "Collecting atmospheric pressure, temperature, and relative humidity...")
             pressure, humid, temp = collect_sensor_data()

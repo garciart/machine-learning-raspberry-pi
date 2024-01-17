@@ -37,7 +37,7 @@ import grove_rgb_lcd
 # Module metadata dunders
 __author__ = "Rob Garcia"
 __copyright__ = "Copyright 2019-2020, Rob Garcia"
-__email__ = "rgarcia@rgprogramming.com"
+__email__ = "rgarcia@rgcoding.com"
 __license__ = "MIT"
 
 BLUE_DHT = 0         # For DHT11
@@ -50,9 +50,10 @@ OFF = 0
 
 
 def sensors_test():
+    # type: () -> None
     """Test the GrovePi DHT sensor, LEDs and RGB LCD screen."""
     try:
-        for y in range(3):
+        for _ in range(3):
             # Get sensor data and actuate LEDs and RGB LCD screen
             [temp, humid] = grovepi.dht(DHT_SENSOR_PORT, BLUE_DHT)
             if not math.isnan(temp) and not math.isnan(humid):
@@ -85,6 +86,7 @@ def sensors_test():
 
 
 def prepare_model(file_name, label_names):
+    # type: (str, list) -> object
     """Train, test, and run different classification estimators and select
     the best classifier.
     (see
@@ -95,7 +97,7 @@ def prepare_model(file_name, label_names):
     :type file_name: str
     :param label_names: The list of labels.
     :type label_names: list
-    :return: The most accurate classifer model in the form of a history object.
+    :return: The most accurate classifier model in the form of a history object.
     :rtype: object
     """
     # Limit decimal places to three and do not use scientific notation
@@ -118,7 +120,7 @@ def prepare_model(file_name, label_names):
         feature_titles = column_titles[:-1]
         label_title = column_titles[-1]
         num_of_inputs = len(feature_titles)
-        values = dataframe.values
+        values = dataframe.to_numpy()
         feature_values = values[:, 0:num_of_inputs]
         label_values = values[:, num_of_inputs]
 
@@ -138,25 +140,21 @@ def prepare_model(file_name, label_names):
         feature_values, label_values, test_size=0.20, random_state=1)
 
     # Create tuple of estimators
-    estimators = []
-    estimators.append(("Logistic Regression", LogisticRegression(
-        solver="liblinear", multi_class="ovr")))
-    estimators.append(
-        ("Linear Support Vector Classification (LinearSVC)", LinearSVC(dual=False)))
-    estimators.append(("Stochastic Gradient Descent (SGD)", SGDClassifier()))
-    estimators.append(
-        ("k-Nearest Neighbors Classifier (k-NN)", KNeighborsClassifier()))
-    estimators.append(("Support Vector Classification (SVC)",
-                       SVC(kernel="linear", C=1.0)))
-    estimators.append(("Gaussian Naive Bayes (GaussianNB)", GaussianNB()))
-    estimators.append(("Random Forest Classifier", RandomForestClassifier()))
-    estimators.append(("Extra Trees Classifier", ExtraTreesClassifier()))
-    estimators.append(("Decision Tree Classifier", DecisionTreeClassifier()))
-    estimators.append(("AdaBoost Classifier", AdaBoostClassifier()))
-    estimators.append(("Gradient Boosting Classifier",
-                       GradientBoostingClassifier()))
-    estimators.append(("Linear Discriminant Analysis (LDA)",
-                       LinearDiscriminantAnalysis()))
+    estimators = [("Logistic Regression", LogisticRegression(
+        solver="liblinear", multi_class="ovr")),
+                  ("Linear Support Vector Classification (LinearSVC)", LinearSVC(dual=False)),
+                  ("Stochastic Gradient Descent (SGD)", SGDClassifier()),
+                  ("k-Nearest Neighbors Classifier (k-NN)", KNeighborsClassifier()),
+                  ("Support Vector Classification (SVC)",
+                   SVC(kernel="linear", C=1.0)),
+                  ("Gaussian Naive Bayes (GaussianNB)", GaussianNB()),
+                  ("Random Forest Classifier", RandomForestClassifier()),
+                  ("Extra Trees Classifier", ExtraTreesClassifier()),
+                  ("Decision Tree Classifier", DecisionTreeClassifier()),
+                  ("AdaBoost Classifier", AdaBoostClassifier()), ("Gradient Boosting Classifier",
+                                                                  GradientBoostingClassifier()),
+                  ("Linear Discriminant Analysis (LDA)",
+                   LinearDiscriminantAnalysis())]
 
     # Evaluate the accuracy of each estimator (limited to classifiers)
     results = []
@@ -180,20 +178,18 @@ def prepare_model(file_name, label_names):
 
 
 def check_model(label_names, selected_model):
+    # type (list, object) -> None
     """Check selected model against unlabeled data (with expected predictions).
 
-    :param label_names: The list of labels.
-    :type label_names: list
-    :param selected_model: The most accurate classifer model in the form of a history object.
-    :type selected_model: object
+    :param list label_names: The list of labels
+    :param object selected_model: The most accurate classifier model in the form of a history object
+    
+    :returns: None
     """
     print("Data to be evaluated:")
-    unlabeled_x = []
-    unlabeled_x.append(
-        ([[1013.25, 0.1, 50.0, 1.0, 0.61, 23.0]], "Slightly Cool"))
-    unlabeled_x.append(([[1013.25, 0.1, 60.0, 1.0, 0.61, 26.0]], "Neutral"))
-    unlabeled_x.append(
-        ([[1013.25, 0.1, 76.0, 1.0, 0.61, 28.0]], "Slightly Warm"))
+    unlabeled_x = [([[1013.25, 0.1, 50.0, 1.0, 0.61, 23.0]], "Slightly Cool"),
+                   ([[1013.25, 0.1, 60.0, 1.0, 0.61, 26.0]], "Neutral"),
+                   ([[1013.25, 0.1, 76.0, 1.0, 0.61, 28.0]], "Slightly Warm")]
     # expected_y = ["Slightly Cool", "Neutral", "Slightly Warm"]
 
     for i, (data, expected_label) in enumerate(unlabeled_x, start=1):
@@ -207,14 +203,16 @@ def check_model(label_names, selected_model):
 
 
 def collect_sensor_data():
+    # type: () -> list
     """Collects temperature and humidity data
-    :return: The temperature and humidity data collected, formated with
-             atmospheric pressure, air speed, metabolic rate, and clothing level.
-    :rtype: list of tuples
+    
+    :returns: The temperature and humidity data collected, formatted with
+       atmospheric pressure, air speed, metabolic rate, and clothing level
+    :rtype: list
     """
     sensor_data = []
     try:
-        for y in range(3):
+        for _ in range(3):
             [temp, humid] = grovepi.dht(DHT_SENSOR_PORT, BLUE_DHT)
             if not math.isnan(temp) and not math.isnan(humid):
                 t_str = str(temp)
@@ -238,15 +236,15 @@ def collect_sensor_data():
 
 
 def process_sensor_data(label_names, selected_model, sensor_data):
+    # type: (list, object, list) -> None
     """Classify unlabeled sensor data against the selected model and get a prediction.
 
-    :param label_names: The list of labels.
-    :type label_names: list
-    :param selected_model: The most accurate classifer model in the form of a history object.
-    :type selected_model: object
-    :param sensor_data: The temperature and humidity data collected, formated with
-                        atmospheric pressure, air speed, metabolic rate, and clothing level.
-    :type sensor_data: list of tuples
+    :param list label_names: The list of labels
+    :param object selected_model: The most accurate classifier model in the form of a history object
+    :param list sensor_data: The temperature and humidity data collected, formatted with
+       atmospheric pressure, air speed, metabolic rate, and clothing level
+    
+    :returns: None
     """
     try:
         sensation = 0
@@ -283,6 +281,7 @@ def process_sensor_data(label_names, selected_model, sensor_data):
 
 
 def shutdown_board():
+    # type: () -> None
     """Turns off LEDs and clears LCD screen"""
     grovepi.digitalWrite(RED_LED, OFF)
     grovepi.digitalWrite(GREEN_LED, OFF)

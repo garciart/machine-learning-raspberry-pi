@@ -1,9 +1,18 @@
+# Ignore files created by venv to support the virtual environment
+[Bb]in
+[Ii]nclude
+[Ll]ib
+[Ll]ib64
+pyvenv.cfg
+__pycache__
+
 /dist
 /smart_sensor.egg-info
 /build
 /__pycache__
 /extra
-/.vscode
+.vscode
+.idea
 dataset.xlsx
 install.log
 notes.txt

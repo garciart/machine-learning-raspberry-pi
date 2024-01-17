@@ -27,23 +27,19 @@ from sklearn.utils import Bunch
 # Module metadata dunders
 __author__ = "Rob Garcia"
 __copyright__ = "Copyright 2019-2020, Rob Garcia"
-__email__ = "rgarcia@rgprogramming.com"
+__email__ = "rgarcia@rgcoding.com"
 __license__ = "MIT"
 
 
-def tensorflow_classification_test(file_name, label_names, unlabeled_x):
+def tensorflow_classification_test(file_name, label_names):
+    # type: (str, list) -> Sequential
     """Classification function using Keras and TensorFlow
 
-    :param file_name: The name of the csv file with the data.
-    :type file_name: str
-    :param label_names: The list of labels.
-    :type label_names: list
-    :param unlabeled_x: Unlabeled data to be classified.
-    :type unlabeled_x: tuple
-    :param expected_y: The expected results of classifying the unlabeled data.
-    :type expected_y: list
-    :return: Numpy array of predicted labels.
-    :rtype: list
+    :param str file_name: The name of the csv file with the data.
+    :param list label_names: The list of labels.
+
+    :returns: Numpy array of predicted labels.
+    :rtype: Sequential
     """
     print("TensorFlow version: {}".format(tf.__version__))
     # Limit decimal places to three and do not use scientific notation
@@ -66,7 +62,7 @@ def tensorflow_classification_test(file_name, label_names, unlabeled_x):
         feature_titles = column_titles[:-1]
         # label_title = column_titles[-1]
         num_of_inputs = len(feature_titles)
-        values = dataframe.values
+        values = dataframe.to_numpy()
         feature_values = values[:, 0:num_of_inputs]
         label_values = values[:, num_of_inputs]
 
@@ -80,7 +76,7 @@ def tensorflow_classification_test(file_name, label_names, unlabeled_x):
     encoder = OneHotEncoder(sparse=False)
     y_values = encoder.fit_transform(y_raw)
 
-    # Split the data into training and test sets using a 80:20 ratio.
+    # Split the data into training and test sets using an 80:20 ratio.
     train_x, test_x, train_y, test_y = train_test_split(
         x_values, y_values, test_size=0.20)
 
@@ -168,14 +164,16 @@ def main():
     ])
     expected_y = ["Slightly Cool", "Neutral", "Slightly Warm"]
     """
-    model = tensorflow_classification_test(
-        file_name, label_names, unlabeled_x)
+    model = tensorflow_classification_test(file_name, label_names)
     # Make predictions for the unlabeled data
-    predictions = model.predict_classes(unlabeled_x, verbose=1)
+    predictions = model.predict(unlabeled_x, verbose=1)
     print()
     for i in range(len(unlabeled_x)):
         print("X={}, Predicted: {} ({}), Expected {}".format(
-            unlabeled_x[i], label_names[predictions[i]], predictions[i], expected_y[i]))
+            unlabeled_x[i],
+            label_names[np.argmax(predictions[i])],
+            predictions[i],
+            expected_y[i]))
     print("Elapsed time: {} seconds.".format((time.time() - start_time)))
     print("Job complete. Have an excellent day.")
 

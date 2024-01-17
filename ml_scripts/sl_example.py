@@ -32,19 +32,20 @@ from sklearn.tree import DecisionTreeClassifier
 # Module metadata dunders
 __author__ = "Rob Garcia"
 __copyright__ = "Copyright 2019-2020, Rob Garcia"
-__email__ = "rgarcia@rgprogramming.com"
+__email__ = "rgarcia@rgcoding.com"
 __license__ = "MIT"
 
 
 def scikit_learn_classification_test(file_name, label_names, *unlabeled_x):
+    # type: (str, list, list) -> None
     """Train, test, and run different classification estimators, selected from
     https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html
-    :param file_name: The name of the csv file with the data.
-    :type file_name: str
-    :param label_names: The list of labels.
-    :type label_names: list
-    :param sample_data: The data to be analyzed.
-    :type sample_data: list of tuples
+
+    :param str file_name: The name of the csv file with the data.
+    :param list label_names: The list of labels.
+    :param list unlabeled_x: The tuples to be analyzed.
+
+    :returns: None
     """
     # Limit decimal places to three and do not use scientific notation
     np.set_printoptions(precision=3)
@@ -66,7 +67,7 @@ def scikit_learn_classification_test(file_name, label_names, *unlabeled_x):
         feature_titles = column_titles[:-1]
         label_title = column_titles[-1]
         num_of_inputs = len(feature_titles)
-        values = dataframe.values
+        values = dataframe.to_numpy()
         feature_values = values[:, 0:num_of_inputs]
         label_values = values[:, num_of_inputs]
 
@@ -86,25 +87,21 @@ def scikit_learn_classification_test(file_name, label_names, *unlabeled_x):
         feature_values, label_values, test_size=0.20, random_state=1)
 
     # Create tuple of estimators
-    estimators = []
-    estimators.append(("Logistic Regression", LogisticRegression(
-        solver="liblinear", multi_class="ovr")))
-    estimators.append(
-        ("Linear Support Vector Classification (LinearSVC)", LinearSVC(dual=False)))
-    estimators.append(("Stochastic Gradient Descent (SGD)", SGDClassifier()))
-    estimators.append(
-        ("k-Nearest Neighbors Classifier (k-NN)", KNeighborsClassifier()))
-    estimators.append(("Support Vector Classification (SVC)",
-                       SVC(kernel="linear", C=1.0)))
-    estimators.append(("Gaussian Naive Bayes (GaussianNB)", GaussianNB()))
-    estimators.append(("Random Forest Classifier", RandomForestClassifier()))
-    estimators.append(("Extra Trees Classifier", ExtraTreesClassifier()))
-    estimators.append(("Decision Tree Classifier", DecisionTreeClassifier()))
-    estimators.append(("AdaBoost Classifier", AdaBoostClassifier()))
-    estimators.append(("Gradient Boosting Classifier",
-                       GradientBoostingClassifier()))
-    estimators.append(("Linear Discriminant Analysis (LDA)",
-                       LinearDiscriminantAnalysis()))
+    estimators = [("Logistic Regression", LogisticRegression(
+        solver="liblinear", multi_class="ovr")),
+                  ("Linear Support Vector Classification (LinearSVC)", LinearSVC(dual=False)),
+                  ("Stochastic Gradient Descent (SGD)", SGDClassifier()),
+                  ("k-Nearest Neighbors Classifier (k-NN)", KNeighborsClassifier()),
+                  ("Support Vector Classification (SVC)",
+                   SVC(kernel="linear", C=1.0)),
+                  ("Gaussian Naive Bayes (GaussianNB)", GaussianNB()),
+                  ("Random Forest Classifier", RandomForestClassifier()),
+                  ("Extra Trees Classifier", ExtraTreesClassifier()),
+                  ("Decision Tree Classifier", DecisionTreeClassifier()),
+                  ("AdaBoost Classifier", AdaBoostClassifier()), ("Gradient Boosting Classifier",
+                                                                  GradientBoostingClassifier()),
+                  ("Linear Discriminant Analysis (LDA)",
+                   LinearDiscriminantAnalysis())]
 
     # Evaluate the accuracy of each estimator
     results = []
@@ -135,7 +132,7 @@ def scikit_learn_classification_test(file_name, label_names, *unlabeled_x):
         model = classifier.fit(feature_values, label_values)
         for j, (data, expected_label) in enumerate(unlabeled_x, start=1):
             print("Sample #{}: Prediction: {} (expected {})".format(
-                j, label_names[int(model.predict(data))], expected_label))
+                j, label_names[(model.predict(data).astype(int))[0]], expected_label))
         print()
 
 
@@ -147,12 +144,9 @@ def main():
     file_name = "thermal_comfort.csv"
     label_names = ["Cold", "Cool", "Slightly Cool",
                    "Neutral", "Slightly Warm", "Warm", "Hot"]
-    unlabeled_x = []
-    unlabeled_x.append(
-        ([[1013.25, 0.1, 50.0, 1.0, 0.61, 23.0]], "Slightly Cool"))
-    unlabeled_x.append(([[1013.25, 0.1, 60.0, 1.0, 0.61, 26.0]], "Neutral"))
-    unlabeled_x.append(
-        ([[1013.25, 0.1, 76.0, 1.0, 0.61, 28.0]], "Slightly Warm"))
+    unlabeled_x = [([[1013.25, 0.1, 50.0, 1.0, 0.61, 23.0]], "Slightly Cool"),
+                   ([[1013.25, 0.1, 60.0, 1.0, 0.61, 26.0]], "Neutral"),
+                   ([[1013.25, 0.1, 76.0, 1.0, 0.61, 28.0]], "Slightly Warm")]
     # expected_y = ["Slightly Cool", "Neutral", "Slightly Warm"]
     print()
     scikit_learn_classification_test(file_name, label_names, *unlabeled_x)

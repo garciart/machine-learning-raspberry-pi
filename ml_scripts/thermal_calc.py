@@ -11,7 +11,7 @@ Styling guide: PEP 8 -- Style Guide for Python Code
 """
 
 from pythermalcomfort.models import pmv_ppd
-from pythermalcomfort.psychrometrics import v_relative
+from pythermalcomfort.utilities import v_relative
 
 LABEL_NAMES = ["Cold", "Cool", "Slightly Cool",
                "Neutral", "Slightly Warm", "Warm", "Hot"]
@@ -21,31 +21,30 @@ def main():
     """Application entry point."""
     # measured air velocity
     v_rel = v_relative(v=0.1, met=1.0)
-    results = []
     # Temperature in Celsius (10C (50F) to 36C (96.8))
     for temp in range(10, 37):
         # Relative humidity (0 to 100%)
         for humid in range(0, 101):
             # Determine the PMV index per the ASHRAE 55 2017
-            results = pmv_ppd(ta=temp, tr=temp, vr=v_rel, rh=humid,
+            results = pmv_ppd(tdb=temp, tr=temp, vr=v_rel, rh=humid,
                               met=1.0, clo=0.61, wme=0, standard="ASHRAE")
             pmv_index = 0
             if results["pmv"] < -2.5:
                 # Cold
                 pmv_index = 0
-            elif(results["pmv"] >= -2.5 and results["pmv"] < -1.5):
+            elif -2.5 <= results["pmv"] < -1.5:
                 # Cool
                 pmv_index = 1
-            elif(results["pmv"] >= -1.5 and results["pmv"] < -0.5):
+            elif -1.5 <= results["pmv"] < -0.5:
                 # Slightly Cool
                 pmv_index = 2
-            elif(results["pmv"] >= -0.5 and results["pmv"] < 0.5):
+            elif -0.5 <= results["pmv"] < 0.5:
                 # Neutral
                 pmv_index = 3
-            elif(results["pmv"] >= 0.5 and results["pmv"] < 1.5):
+            elif 0.5 <= results["pmv"] < 1.5:
                 # Slightly Warm
                 pmv_index = 4
-            elif(results["pmv"] >= 1.5 and results["pmv"] < 2.5):
+            elif 1.5 <= results["pmv"] < 2.5:
                 # Warm
                 pmv_index = 5
             elif results["pmv"] >= 2.5:

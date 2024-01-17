@@ -25,7 +25,7 @@ Since there's no MicroCenter or Home Depot in space (and space delivery is not i
 - Temperature and Humidity Meter: $19.99
 - Universal Remote Control: $9.99
 
-In addition, users could add or create ad hoc sensors and actuators from simple components using wires, resistors, breadboards, etc. As a bonus, the S3 could communicate over Bluetooth, RF, and WiFi wireless networks.
+In addition, users could add or create ad hoc sensors and actuators from simple components using wires, resistors, breadboards, etc. As a bonus, the S3 could communicate over Bluetooth, RF, and Wi-Fi wireless networks.
 
 This device would also use machine learning, as well as rule-based, conditional logic, to analyze data on the "edge" and act on the results through actuators. This system would complement or replace rule-based, conditional logic systems, such as engine control units (i.e., ECU's, which use lookup tables), electronic flight control systems (i.e., EFCS's, which use flight control laws), heating, ventilation, and air conditioning (HVAC) control systems (which use target states), etc.
 
@@ -63,16 +63,16 @@ This is not the only configuration the S3 can use; for our bonus demo, instead o
 4. The application runs the data against the model using the selected classifier.
 5. The application returns the results:
    - If the result is "Neutral", it complies with ASHRAE Standard 55-2017. The application displays the data on its LCD screen and indicates compliance by lighting a green LED. The application can also forward this data to a supervisory control and data acquisition (SCADA) system via JSON.
-   - If the result is anything but "Neutral), it does NOT comply with ASHRAE Standard 55-2017. The application displays the data on its LCD screen and indicates non-compliance by lighting a red LED. The application can also forward this data to a supervisory control and data acquisition (SCADA) system via JSON and/or adjust the HVAC system autonomously.
+   - If the result is anything but "Neutral"), it does NOT comply with ASHRAE Standard 55-2017. The application displays the data on its LCD screen and indicates non-compliance by lighting a red LED. The application can also forward this data to a supervisory control and data acquisition (SCADA) system via JSON and/or adjust the HVAC system autonomously.
 6. The application repeats steps 3 through 7 until it is shut off.
 
 For this demo, we will only measure operative temperature and relative humidity. However, the S3 can also process atmospheric pressure, air speed, metabolic rate, and the insulating effects of clothing level, to predict if the occupants will feel cold, cool, slightly cool, neutral, slightly warm, warm, or hot.
 
 | atmo_pres | air_speed | rel_humid | meta_rate | cloth_lvl | oper_temp | sens_desc |
 |:---------:|:---------:|:---------:|:---------:|:---------:|:---------:|:---------:|
-|   1013.25 |       0.1 |      50.0 |       1.0 |      0.61 |      23.0 |         2 |
-|   1013.25 |       0.1 |      60.0 |       1.0 |      0.61 |      26.0 |         3 |
-|   1013.25 |       0.1 |      70.0 |       1.0 |      0.61 |      28.0 |         4 |
+|  1013.25  |    0.1    |   50.0    |    1.0    |   0.61    |   23.0    |     2     |
+|  1013.25  |    0.1    |   60.0    |    1.0    |   0.61    |   26.0    |     3     |
+|  1013.25  |    0.1    |   70.0    |    1.0    |   0.61    |   28.0    |     4     |
 
 While this task would be easy to accomplish with simple if-else-then program, we also wanted to demonstrate the capabilities of machine learning.
 
@@ -82,7 +82,7 @@ While this task would be easy to accomplish with simple if-else-then program, we
 
 2. Set up the Raspberry Pi with the GrovePi HAT:
 
-   - Follow the instructions at [https://www.dexterindustries.com/GrovePi/get-started-with-the-grovepi/](https://www.dexterindustries.com/GrovePi/get-started-with-the-grovepi/) to setup and update your system:
+   - Follow the instructions at [https://www.dexterindustries.com/GrovePi/get-started-with-the-grovepi/](https://www.dexterindustries.com/GrovePi/get-started-with-the-grovepi/) to set up and update your system:
 
      - For Step 2, use the custom software you installed on your card earlier.
      - For Step 3, use "pi" for the username and "robots1234" for the password.
@@ -224,7 +224,7 @@ While this task would be easy to accomplish with simple if-else-then program, we
 
    - **Process Sensor Data:** Here, we run the collected data against the selected model. We collect the results, average them together, and make a determination of the conditions in the room based on the ASHRAE 7-point scale for thermal comfort.
 
-   - **Shutdown:** Finally, we shutdown the sensors and actuators to extend their working life.
+   - **Shutdown:** Finally, we shut down the sensors and actuators to extend their working life.
 
    - Here are the results of a sample run:
 
@@ -276,7 +276,7 @@ While this task would be easy to accomplish with simple if-else-then program, we
 
 ### Data Source
 
-Data verified using the [Thermal Comfort Tool](https://comfort.cbe.berkeley.edu/) from the Center for the Built Environment (CBE at the University of California, Berkeley.
+Data verified using the [Thermal Comfort Tool](https://comfort.cbe.berkeley.edu/) from the Center for the Built Environment (CBE) at the University of California, Berkeley.
 
 ### Features
 
@@ -308,7 +308,7 @@ Like we stated earlier, for extra credit, we will demonstrate how to collect and
 
 1. Turn on both the Raspberry Pi 3 Model B+ and the Pi Zero W.
 
-   > *Note - By the way, for this demo, you do not need the GrovePi HAT or the GrovePi code. We just like the lights (and the board we printed out on our Ender 3. Thanks Chris Cirone at [https://www.thingiverse.com/thing:2161971](https://www.thingiverse.com/thing:2161971)!)*
+   > *Note - By the way, for this demo, you do not need the GrovePi HAT or the GrovePi code. We just like the lights (and the board we printed out on our Ender 3. Thanks, Chris Cirone at [https://www.thingiverse.com/thing:2161971](https://www.thingiverse.com/thing:2161971)!)*
 
 2. Make and test the connection:
 

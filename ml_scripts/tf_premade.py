@@ -14,34 +14,33 @@ Ref: https://www.tensorflow.org/tutorials/estimator/premade
 
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-
-# import math
 import time
 
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+from tensorflow.estimator import LinearClassifier  # noqa
 
 # Module metadata dunders
 __author__ = "Rob Garcia"
 __copyright__ = "Copyright 2019-2020, Rob Garcia"
-__email__ = "rgarcia@rgprogramming.com"
+__email__ = "rgarcia@rgcoding.com"
 __license__ = "MIT"
+
+from tensorflow.python.data.ops.dataset_ops import DatasetV2
 
 
 def input_fn(feature_dict, label_values=None, training=True, batch_size=256):
+    # type: (dict, list, bool, int) -> DatasetV2
     """An overloaded input function for training, evaluating, and prediction
 
-    :param feature_dict: A Python dictionary in which each key is the name of
-                         a feature and each value is an array containing all
-                         of that feature's values.
-    :type feature_dict: dict
-    :param label_values: An array containing the values of the label for every example.
-    :type label_values: array
-    :param training: Shuffle data set if training.
-    :type training: bool
-    :param batch_size: The number of training examples utilized in one iteration.
-    :type batch_size: int
+    :param dict feature_dict: A Python dictionary in which each key is the name of
+       a feature and each value is an array containing all
+       of that feature's values.
+    :param list label_values: An array containing the values of the label for every example.
+    :param bool training: Shuffle data set if training.
+    :param int batch_size: The number of training examples utilized in one iteration.
+
     :return: A batched dataset
     :rtype: list
     """
@@ -59,17 +58,15 @@ def input_fn(feature_dict, label_values=None, training=True, batch_size=256):
 
 
 def tensorflow_classification_test(file_name, label_names):
-    """Implementation of TensorFlow premade estimators:
+    # type: (str, list) -> LinearClassifier
+    """Implementation of TensorFlow pre-made estimators:
     https://www.tensorflow.org/tutorials/estimator/premade
 
-    :param file_name: The name of the csv file with the data.
-    :type file_name: str
-    :param label_names: The list of labels.
-    :type label_names: list
-    :param expected_y: The expected results of classifying the unlabeled data.
-    :type expected_y: list
+    :param str file_name: The name of the csv file with the data.
+    :param list label_names: The list of labels.
+
     :return: Numpy array of predicted labels.
-    :rtype: list
+    :rtype: LinearClassifier
     """
     print("TensorFlow version: {}".format(tf.__version__))
     # Limit decimal places to three and do not use scientific notation
@@ -78,9 +75,9 @@ def tensorflow_classification_test(file_name, label_names):
 
     # Import and parse the dataset
     # Broken down for tutorial. Can be optimized into fewer lines.
-    column_titles = []
+    # column_titles = []
     # feature_titles = []
-    label_title = ""
+    # label_title = ""
     # num_of_inputs = 0
     num_of_outputs = len(label_names)
     # feature_values = []
@@ -126,7 +123,9 @@ def tensorflow_classification_test(file_name, label_names):
     # two-hidden-layer feedforward networks. IEEE Transactions on Neural Networks,
     # 14(2), 274–281. doi:10.1109/tnn.2003.809401
     # Thanks to Arvis Sulovari of the University of Washington Seattle
+
     """
+    import math
     hidden_layer_1 = int(round(math.sqrt(((num_of_outputs + 2) * num_of_inputs)) +
                                (2 * (math.sqrt(num_of_inputs / (num_of_outputs + 2))))))
     hidden_layer_2 = int(
@@ -144,6 +143,7 @@ def tensorflow_classification_test(file_name, label_names):
         dnn_hidden_units=[hidden_layer_1, hidden_layer_2],
         n_classes=num_of_outputs)
     """
+
     # Linear classifier model.
     classifier = tf.estimator.LinearClassifier(
         feature_columns=my_feature_columns,
