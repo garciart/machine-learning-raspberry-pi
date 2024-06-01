@@ -18,3 +18,4 @@ install.log
 notes.txt
 _configtest
 _configtest.*
+venv/
